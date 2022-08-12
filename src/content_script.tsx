@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 const steamId: string = "76561198802139714"
 
-const appId: number = 567060
+const appId: number = 567060 //Card id?
 
 //*[@id="responsive_page_template_content"]/div[1]/div[1]/div/div/div/div[3]/div[1]/a/div/div
 
