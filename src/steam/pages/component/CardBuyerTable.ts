@@ -2,8 +2,8 @@ import Table, { RowConfiguration } from "./Table";
 import SteamElement from "./SteamElement";
 import currency from "currency.js";
 
-export interface Card {
-  count: number,
+export interface CardMarketPosition {
+  quantity: number,
   appId: number,
   hashName: string,
   price: number
@@ -13,7 +13,7 @@ class CardBuyerTable extends Table implements SteamElement {
 
   private static readonly configuration: Array<RowConfiguration | undefined> = [
     {
-      name: "count",
+      name: "quantity",
       executor: (td) => {
         return td.getElementsByTagName("input")[0].value;
       }
@@ -38,7 +38,7 @@ class CardBuyerTable extends Table implements SteamElement {
     }
   ];
 
-  private readonly cards: Array<Card>;
+  private readonly cards: Array<CardMarketPosition>;
 
 
   constructor(table: HTMLElement) {
@@ -47,8 +47,8 @@ class CardBuyerTable extends Table implements SteamElement {
     this.cards = this.getRows().map((rowKeyValue) => {
       const metaData =  rowKeyValue.get("marketHashName") as Array<string>;
 
-      return <Card>{
-        count: parseInt(rowKeyValue.get("count") as string),
+      return <CardMarketPosition>{
+        quantity: parseInt(rowKeyValue.get("quantity") as string),
         price: currency(rowKeyValue.get("price") as string).value,
         appId: parseInt(metaData[0]),
         hashName: metaData[1],
@@ -57,7 +57,7 @@ class CardBuyerTable extends Table implements SteamElement {
   }
 
 
-  public getCards(): Array<Card> {
+  public getCards(): Array<CardMarketPosition> {
     return this.cards;
   }
 

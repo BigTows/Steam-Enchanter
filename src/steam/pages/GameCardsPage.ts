@@ -8,6 +8,18 @@ import CardMarketPage from "./CardMarketPage";
 import ComponentLoader from "./component/ComponentLoader";
 import GameCardExplore from "./component/GameCardExplore";
 
+export interface CardOrderDetails {
+  /**
+   * Hash name of card
+   */
+  hashName: string,
+
+  /**
+   * Quantity need's to buy
+   */
+  quantity: number
+}
+
 enum Elements {
   cards = "cards"
 }
@@ -17,7 +29,6 @@ interface GameCardMeta {
   hashName: string,
   count: number
 }
-
 
 class GameCardsPage extends SteamPage {
 
@@ -37,20 +48,31 @@ class GameCardsPage extends SteamPage {
     this.gameAppId = appId;
   }
 
-  public async getCardMarketPage(): Promise<CardMarketPage> {
+  public async getCardMarketPage(details: Array<CardOrderDetails>): Promise<CardMarketPage> {
 
-    const params = new URLSearchParams()
+    const params = new URLSearchParams();
 
     params.append("appid", GameCardsPage.STEAM_CARD_APP_ID);
 
     this.getGameCards().forEach((gameCard) => {
       params.append("items[]", gameCard.hashName);
-      params.append("qty[]", "1");
+      params.append("qty[]", this.findQuantity(gameCard.hashName, details));
     });
 
     return await SteamPageLoader.loadCardMarketPage(
       `https://steamcommunity.com/market/multibuy?${params.toString()}`
     );
+  }
+
+  private findQuantity(cardHashName: string, details: Array<CardOrderDetails>): string {
+
+    const result = details.find((detail) => {
+      return detail.hashName === cardHashName;
+    });
+    if (result === undefined) {
+      return "0";
+    }
+    return result.quantity + "";
   }
 
 

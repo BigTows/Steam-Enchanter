@@ -1,4 +1,7 @@
 import SteamPageLoader from "./steam/pages/SteamPageLoader";
+import { CardOrderDetails } from "./steam/pages/GameCardsPage";
+import Cookies from "js-cookie";
+import SteamMarketApi from "./steam/api/SteamMarketApi";
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   if (msg.color) {
@@ -18,7 +21,7 @@ const cardsId: number = 286160; //Card id?
 
 
 const owner = 3;
-const badgeLvl = 1;
+const badgeLvl = 1; //TODO calculate...
 
 //*[@id="responsive_page_template_content"]/div[1]/div[1]/div/div/div/div[3]/div[1]/a/div/div
 
@@ -27,13 +30,42 @@ const badgeLvl = 1;
 
 SteamPageLoader.loadGameCard(steamId, cardsId).then((page) => {
 
-  console.log(page.getGameCards());
+  const details: Array<CardOrderDetails> = page.getGameCards().map(gameCard => {
+    return {
+      hashName: gameCard.hashName,
+      quantity: (5 - badgeLvl - gameCard.count)
+    };
+  });
+
+  page.getCardMarketPage(details).then(page => {
+
+    page.getCards().forEach(card => {
+      // new SteamMarketApi().createOrder({
+      //   sessionId: getSessionId() as string,
+      //   currency: 5,
+      //   appId: card.appId,
+      //   marketHashName: card.hashName,
+      //   priceTotal: (card.price + 200) * card.count,
+      //   quantity: card.count
+      // }).then((result) => {
+      //
+      //   setInterval(()=>{
+      //     new SteamMarketApi().getOrderStatus(getSessionId() as string, result).then(r=>{
+      //       console.log(r)
+      //     })
+      //   },1000)
+      // });
+    });
 
 
-  page.getCardMarketPage().then(page => {
     console.log(page.getCards());
   });
 });
+
+
+function getSessionId(): string | undefined {
+  return Cookies.get("sessionid");
+}
 
 
 //SteamPageLoader.loadCardMarketPage("https://steamcommunity.com/market/multibuy?appid=753&items[]=567060-Aborigen&qty[]=1&items[]=567060-Nazi%20Brute&qty[]=1&items[]=567060-Nazi%20jumper&qty[]=1&items[]=567060-Nazi%20officer&qty[]=1&items[]=567060-Aborigen%20shaman&qty[]=1");

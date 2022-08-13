@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-
+import axiosRetry from 'axios-retry';
 export interface CreateMarkerOrderRequest {
   sessionId: string,
   currency: number,
@@ -36,7 +36,9 @@ class SteamMarketApi {
 
   constructor() {
     //TODO host, axios
-    this.httpClient = axios;
+    this.httpClient = new Axios({
+      withCredentials: true
+    });
   }
 
   /**
@@ -55,9 +57,7 @@ class SteamMarketApi {
     data.append("billing_state", "");
     data.append("save_my_address", "0");
 
-    const result = await this.httpClient.post<CreateMarketOrderResponse>(`${(SteamMarketApi.STEAM)}/market/createbuyorder/`, data, {
-      withCredentials: true
-    });
+    const result = await this.httpClient.post<CreateMarketOrderResponse>(`${(SteamMarketApi.STEAM)}/market/createbuyorder/`, data);
     console.log(result.data);
     //TODO Errors?
 
@@ -68,11 +68,7 @@ class SteamMarketApi {
   }
 
   public async getOrderStatus(sessionId: string, orderId: string): Promise<OrderStatusResponse> {
-    const resultRaw = await this.httpClient.get<OrderStatusResponseRaw>(`${(SteamMarketApi.STEAM)}/market/getbuyorderstatus/?sessionid=${sessionId}&buy_orderid=${orderId}`,
-      {
-        withCredentials: true
-      }
-    );
+    const resultRaw = await this.httpClient.get<OrderStatusResponseRaw>(`${(SteamMarketApi.STEAM)}/market/getbuyorderstatus/?sessionid=${sessionId}&buy_orderid=${orderId}`);
 
     const result: OrderStatusResponse = {
       success: resultRaw.data.success === 1,
@@ -100,11 +96,7 @@ class SteamMarketApi {
     data.append("sessionid", sessionId);
     data.append("buy_orderid", orderId);
 
-    const result = await this.httpClient.post(`${(SteamMarketApi.STEAM)}/market/cancelbuyorder/`, data,
-      {
-        withCredentials: true
-      }
-    );
+    const result = await this.httpClient.post(`${(SteamMarketApi.STEAM)}/market/cancelbuyorder/`, data);
 
     if (result.data.success !== 1){
       throw new Error("Can't cancel order at Steam :(");

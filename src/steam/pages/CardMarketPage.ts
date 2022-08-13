@@ -1,5 +1,5 @@
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
-import CardBuyerTable, { Card } from "./component/CardBuyerTable";
+import CardBuyerTable, { CardMarketPosition } from "./component/CardBuyerTable";
 import ComponentLoader from "./component/ComponentLoader";
 import Cookies from "js-cookie";
 
@@ -21,23 +21,10 @@ class CardMarketPage extends SteamPage {
   constructor(root: HTMLElement) {
 
     super(root, CardMarketPage.configuration);
-    // api.createOrder({
-    //   sessionId: this.getSessionId() as string,
-    //   currency: 5,
-    //   appId: cards[0].appId,
-    //   marketHashName: cards[0].hashName,
-    //   priceTotal: cards[0].price * 1,
-    //   quantity: 1
-    // }).then((result) => {
-    //   api.getOrderStatus(this.getSessionId() as string, result);
-    //   api.cancelOrder(this.getSessionId() as string, result);
-    // });
-
-
   }
 
 
-  public getCards(): Array<Card> {
+  public getCards(): Array<CardMarketPosition> {
     return this.getComponentElement<CardBuyerTable>(Components.Table).getCards();
   }
 
