@@ -1,70 +1,48 @@
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
-import Table, { RowConfiguration } from "./elements/Table";
+import CardBuyerTable from "./component/CardBuyerTable";
+import ComponentLoader from "./component/ComponentLoader";
+import Cookies from "js-cookie";
+import SteamMarketApi from "../api/SteamMarketApi";
+
+enum Components {
+  Table = "Table",
+}
 
 class CardMarketPage extends SteamPage {
 
   private static readonly configuration: Array<SteamPageConfiguration> = [
     {
-      name: "test",
+      name: Components.Table,
       selector: "#BG_bottom > table",
-      component: undefined
+      component: new ComponentLoader(CardBuyerTable)
     }
   ];
 
 
   constructor(root: HTMLElement) {
 
-    const config: Array<RowConfiguration | undefined> = [
-      {
-        name: "test",
-        executor: (td) => {
-          return td.getElementsByTagName("input")[0].value;
-        }
-      },
-      {
-        name: "market_hash_name",
-        executor: (td) => {
-          const paths = decodeURI(td.getElementsByTagName("a")[0].href).split("/");
-          return paths[paths.length - 1];
-        }
-      },
-      {
-        name: "price",
-        executor: (td) => {
-          return td.getElementsByTagName("input")[0].value;
-        }
-      }
-    ];
-    //TODO {"success":1,"buy_orderid":""} POST
-    // https://steamcommunity.com/market/createbuyorder/
-    // sessionid=
-    // &currency=5
-    // appid=753
-    // market_hash_name=567060-Nazi+Brute
-    // price_total=10
-    // quantity=1
-    // billing_state=
-    // save_my_address=0
+    super(root, CardMarketPage.configuration);
 
-    //TODO GET
-    // https://steamcommunity.com/market/getbuyorderstatus/?sessionid=&buy_orderid=
-    // {"success":1,"active":1,"purchased":0,"quantity":"1","quantity_remaining":"1","purchases":[]}
+    const cards = this.getComponentElement<CardBuyerTable>(Components.Table).getCards();
+    const api = new SteamMarketApi();
+    // api.createOrder({
+    //   sessionId: this.getSessionId() as string,
+    //   currency: 5,
+    //   appId: cards[0].appId,
+    //   marketHashName: cards[0].hashName,
+    //   priceTotal: 170,
+    //   quantity: 10
+    // });
 
-    //TODO POST
-    // https://steamcommunity.com/market/cancelbuyorder/
-    // sessionid:
-    // buy_orderid:
+    api.getOrderStatus(this.getSessionId() as string, "5332634257")
+    api.cancelOrder(this.getSessionId() as string, "5332634257")
 
 
 
-    new Table(
-      root.querySelector("#BG_bottom > table") as HTMLElement as HTMLTableElement,
-      config
-    );
+  }
 
-
-    console.log(root);
-    super(root, []);
+  public getSessionId(): string | undefined {
+    return Cookies.get("sessionid");
   }
 
 }
