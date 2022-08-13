@@ -37,7 +37,8 @@ class SteamMarketApi {
   private static readonly COUNT_RETRIES = 4;
 
   private static readonly STEAM_RETRIES_CODES = [
-    40
+    40,//Tod many request
+    107//Извините! Серверы Steam не ответили на запрос о ва…полнен. Если это не так, повторите попытку позже.
   ];
 
   constructor() {
