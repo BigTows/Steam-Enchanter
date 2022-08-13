@@ -1,7 +1,7 @@
 import SteamPageLoader from "./steam/pages/SteamPageLoader";
 import { CardOrderDetails } from "./steam/pages/GameCardsPage";
 import Cookies from "js-cookie";
-import SteamMarketApi from "./steam/api/SteamMarketApi";
+import SteamCardTraderService from "./service/SteamCardTraderService";
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   if (msg.color) {
@@ -16,8 +16,8 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 
 const steamId: string = "76561198802139714";
 
-const cardsId: number = 286160; //Card id?
-//const cardsId: number = 48000; //Card id?
+//const cardsId: number = 286160; //Card id?
+const cardsId: number = 223850; //Card id?
 
 
 const owner = 3;
@@ -39,26 +39,9 @@ SteamPageLoader.loadGameCard(steamId, cardsId).then((page) => {
 
   page.getCardMarketPage(details).then(page => {
 
-    page.getCards().forEach(card => {
-      // new SteamMarketApi().createOrder({
-      //   sessionId: getSessionId() as string,
-      //   currency: 5,
-      //   appId: card.appId,
-      //   marketHashName: card.hashName,
-      //   priceTotal: (card.price + 200) * card.count,
-      //   quantity: card.count
-      // }).then((result) => {
-      //
-      //   setInterval(()=>{
-      //     new SteamMarketApi().getOrderStatus(getSessionId() as string, result).then(r=>{
-      //       console.log(r)
-      //     })
-      //   },1000)
-      // });
-    });
-
-
-    console.log(page.getCards());
+    new SteamCardTraderService().createTrader(
+      page.getCards()
+    );
   });
 });
 

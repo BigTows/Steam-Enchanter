@@ -1,5 +1,5 @@
 import axios, { Axios } from "axios";
-import SteamCardTraderProcess from "./SteamCardTraderProcess";
+import SteamCardTraderProcess, { CardOrderOperationContext } from "./SteamCardTraderProcess";
 import { CardMarketPosition } from "../steam/pages/component/CardBuyerTable";
 import Cookies from "js-cookie";
 import SteamMarketApi from "../steam/api/SteamMarketApi";
@@ -17,38 +17,39 @@ class SteamCardTraderService {
   }
 
 
-  public async createTrader(positions: Array<CardMarketPosition>): SteamCardTraderProcess {
+  public async createTrader(positions: Array<CardMarketPosition>): Promise<SteamCardTraderProcess> {
     const api = new SteamMarketApi();
     const sessionId = this.getSessionId();
 
-    const maximumOverprice = 200;// TODO 200 is maximum overprice for position, move to options.
+    const cardOrderOperationContexts: Array<CardOrderOperationContext> = [];
 
-    positions.forEach(position => {
-      api.createOrder({
-        sessionId: sessionId,
-        currency: 5, // TODO need to calculate
-        appId: position.appId,
-        marketHashName: position.hashName,
-        priceTotal: (position.price + maximumOverprice) * position.quantity,
-        quantity: position.quantity
-      });
-    });
+    for (const position of positions) {
+
+      const result = await this.createOrder(sessionId, position);
+      cardOrderOperationContexts.push(
+        {
+          orderId: result,
+          quantity: position.quantity
+        }
+      );
+
+    }
+    return new SteamCardTraderProcess(api, sessionId, cardOrderOperationContexts);
   }
 
 
-  private async createOrder(sessionId: string, position: CardMarketPosition, attempts: number) {
+  private async createOrder(sessionId: string, position: CardMarketPosition): Promise<string> {
     const api = new SteamMarketApi();
     const maximumOverprice = 200;// TODO 200 is maximum overprice for position, move to options.
-    try {
-      await api.createOrder({
-        sessionId: sessionId,
-        currency: 5, // TODO need to calculate
-        appId: position.appId,
-        marketHashName: position.hashName,
-        priceTotal: (position.price + maximumOverprice) * position.quantity,
-        quantity: position.quantity
-      });
-    }catch ()
+
+    return await api.createOrder({
+      sessionId: sessionId,
+      currency: 5, // TODO need to calculate
+      appId: position.appId,
+      marketHashName: position.hashName,
+      priceTotal: (position.price + maximumOverprice) * position.quantity,
+      quantity: position.quantity
+    });
   }
 
   private getSessionId(): string {
@@ -61,3 +62,5 @@ class SteamCardTraderService {
 
 
 }
+
+export default SteamCardTraderService;
