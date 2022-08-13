@@ -21,7 +21,7 @@ class CardBuyerTable extends Table implements SteamElement {
     {
       name: "marketHashName",
       executor: (td) => {
-        let url = decodeURI(td.getElementsByTagName("a")[0].href);
+        let url = decodeURIComponent(td.getElementsByTagName("a")[0].href);
         url = url.replace("https://steamcommunity.com/market/listings/", "");
         const paths = url.split("/");
         return [
