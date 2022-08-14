@@ -1,21 +1,13 @@
 import { template } from "./steam/teamplates/LevelUpBlock";
+import SteamCardExchangeApi from "./steam/api/SteamCardExchangeApi";
 
-chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-  if (msg.color) {
-    console.log("Receive color = " + msg.color);
-    document.body.style.backgroundColor = msg.color;
-    sendResponse("Change color to " + msg.color);
-  } else {
-    sendResponse("Color message is none.");
-  }
-});
 const elements = document.getElementsByClassName("profile_header_actions");
 
 if (elements.length !== 0) {
   const personalLevelBlock = elements[0] as HTMLElement;
 
   const profileArea = document.getElementsByClassName("profile_customization_area")[0] as HTMLElement;
-  const levelUpTemplate = template()
+  const levelUpTemplate = template();
   profileArea.prepend(levelUpTemplate);
 
 
@@ -38,7 +30,22 @@ if (elements.length !== 0) {
 const steamId: string = "76561198802139714";
 
 //const cardsId: number = 286160; //Card id?
-const cardsId: number = 567060; //Card id?
+const cardsId: number = 567060; //App id for card
+
+// for (let i = 0; i < 40; i++) {
+//
+//   const appId = parseInt(apps[i]);
+//
+//   SteamPageLoader.loadGameCard(steamId, appId).then((page) => {
+//     console.log(`Appid ${appId}: `, page.getLevelBadge());
+//   });
+//
+// }
+
+
+new SteamCardExchangeApi().getLoad().then(a=>{
+  console.log(a)
+})
 
 
 const owner = 3;
@@ -72,4 +79,3 @@ const badgeLvl = 2; //TODO calculate...
 //https://steamcommunity.com/market/multibuy?appid=753&items[]=567060-Aborigen&qty[]=1&items[]=567060-Nazi%20Brute&qty[]=1&items[]=567060-Nazi%20jumper&qty[]=1&items[]=567060-Nazi%20officer&qty[]=1&items[]=567060-Aborigen%20shaman&qty[]=1
 
 //console.log(global.g_steamID as string)
-

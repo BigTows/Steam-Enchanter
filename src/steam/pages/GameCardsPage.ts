@@ -1,5 +1,6 @@
 /**
- * This is OOP retrospective of page Steam `Steam Community :: Steam Badges :: <APP_NAME>
+ * This is OOP retrospective of page Steam `Steam Community :: Steam Badges :: <APP_NAME>.
+ * @link https://steamcommunity.com/id/<USER_NAME>/gamecards/<APP_ID>/
  */
 
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
@@ -7,6 +8,7 @@ import SteamPageLoader from "./SteamPageLoader";
 import CardMarketPage from "./CardMarketPage";
 import ComponentLoader from "./component/ComponentLoader";
 import GameCardExplore from "./component/GameCardExplore";
+import CardBadge from "./component/CardBadge";
 
 export interface CardOrderDetails {
   /**
@@ -21,7 +23,8 @@ export interface CardOrderDetails {
 }
 
 enum Elements {
-  cards = "cards"
+  cards = "cards",
+  badge = "badge"
 }
 
 interface GameCardMeta {
@@ -39,6 +42,11 @@ class GameCardsPage extends SteamPage {
       name: Elements.cards,
       selector: "#responsive_page_template_content > div.pagecontent > div.maincontent > div.badge_row.depressed.badge_gamecard_page > div > div:nth-child(6) > div.badge_card_set_cards",
       component: new ComponentLoader(GameCardExplore)
+    },
+    {
+      name: Elements.badge,
+      selector: "#responsive_page_template_content > div.pagecontent > div.maincontent > div > div > div.badge_content.gamecard_details > div.badge_current > div",
+      component: new ComponentLoader(CardBadge)
     }
   ];
   private readonly gameAppId: number;
@@ -85,6 +93,10 @@ class GameCardsPage extends SteamPage {
         count: ownedCard.count
       };
     });
+  }
+
+  public getLevelBadge(): number {
+    return this.getComponentElement<CardBadge>(Elements.badge).getLevel();
   }
 }
 
