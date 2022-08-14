@@ -1,14 +1,19 @@
-import { template } from "./steam/teamplates/LevelUpBlock";
 import SteamCardExchangeApi from "./steam/api/SteamCardExchangeApi";
+import LevelUpBlock from "./steam/teamplates/LevelUpBlock";
+import SteamPageLoader from "./steam/pages/SteamPageLoader";
+import SteamCardTraderService from "./service/SteamCardTraderService";
+import { CardOrderDetails } from "./steam/pages/GameCardsPage";
 
 const elements = document.getElementsByClassName("profile_header_actions");
+
+const levelUpBlock = new LevelUpBlock();
+const steamId: string = "76561198802139714"; //TODO CALCULATE!
 
 if (elements.length !== 0) {
   const personalLevelBlock = elements[0] as HTMLElement;
 
   const profileArea = document.getElementsByClassName("profile_customization_area")[0] as HTMLElement;
-  const levelUpTemplate = template();
-  profileArea.prepend(levelUpTemplate);
+  profileArea.prepend(levelUpBlock.getBlock());
 
 
   const button = document.createElement("a");
@@ -17,9 +22,46 @@ if (elements.length !== 0) {
   button.innerHTML = "<span>+ Level</span>";
   button.href = "#";
 
+  levelUpBlock.show();
+
+  new SteamCardExchangeApi().getLoad().then(async steamBadges => {
+
+
+    for (let i = 0; i < 8; i++) {
+      const gameCardsPage = await SteamPageLoader.loadGameCard(steamId, steamBadges[i].appId);
+      if (gameCardsPage.getLevelBadge() < 5) {
+        levelUpBlock.addApp(steamBadges[i].appId, steamBadges[i].appName, steamBadges[i].price, () => {
+
+console.log("assa")
+          const details: Array<CardOrderDetails> = gameCardsPage.getGameCards().map(gameCard => {
+            return {
+              hashName: gameCard.hashName,
+              quantity: (5 - gameCardsPage.getLevelBadge() - gameCard.count)
+            };
+          });
+
+          gameCardsPage.getCardMarketPage(details).then(page => {
+
+            new SteamCardTraderService().createTrader(
+              page.getCards()
+            );
+          });
+        });
+      }
+    }
+  });
+
+
   button.onclick = function() {
-    console.log(101001);
-    levelUpTemplate.style.display = "";
+    levelUpBlock.show();
+
+    // new SteamCardExchangeApi().getLoad().then(a => {
+    //   a.forEach(steamBadge => {
+    //     levelUpBlock.addApp(steamBadge.appId, steamBadge.appName, steamBadge.price);
+    //   });
+    // });
+
+
   };
 
 
@@ -27,25 +69,9 @@ if (elements.length !== 0) {
 }
 
 
-const steamId: string = "76561198802139714";
-
-//const cardsId: number = 286160; //Card id?
-const cardsId: number = 567060; //App id for card
-
-// for (let i = 0; i < 40; i++) {
-//
-//   const appId = parseInt(apps[i]);
-//
-//   SteamPageLoader.loadGameCard(steamId, appId).then((page) => {
-//     console.log(`Appid ${appId}: `, page.getLevelBadge());
-//   });
-//
-// }
-
-
-new SteamCardExchangeApi().getLoad().then(a=>{
-  console.log(a)
-})
+new SteamCardExchangeApi().getLoad().then(a => {
+  console.log(a);
+});
 
 
 const owner = 3;
