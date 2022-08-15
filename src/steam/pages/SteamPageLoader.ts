@@ -7,24 +7,43 @@ class SteamPageLoader {
 
 
   public static async loadGameCard(steamId: string, appId: number): Promise<GameCardsPage> {
-    const html = await SteamPageLoader.loadPage(`https://steamcommunity.com/profiles/${steamId}/gamecards/${appId}`);
-    return new GameCardsPage(html, appId);
+
+    return SteamPageLoader.loadWithRetries(async () => {
+      return new GameCardsPage(
+        await SteamPageLoader.loadPage(`https://steamcommunity.com/profiles/${steamId}/gamecards/${appId}`), appId);
+    }, 4);
   }
 
 
   public static async loadCardMarketPage(link: string): Promise<CardMarketPage> {
-    return new CardMarketPage(
-      await SteamPageLoader.loadPage(link)
-    );
+    return SteamPageLoader.loadWithRetries(async () => {
+      return new CardMarketPage(
+        await SteamPageLoader.loadPage(link)
+      );
+    }, 4);
   }
 
   public static async loadUserCompletedBadges(steamId: string, page: number): Promise<UserCompletedBadgesPage> {
 
-    return new UserCompletedBadgesPage(
-      await SteamPageLoader.loadPage(`https://steamcommunity.com/profiles/${steamId}/badges/?sort=c&p=${page}`),
-      steamId, page
-    );
+    return SteamPageLoader.loadWithRetries(async () => {
+      return new UserCompletedBadgesPage(
+        await SteamPageLoader.loadPage(`https://steamcommunity.com/profiles/${steamId}/badges/?sort=c&p=${page}`),
+        steamId, page
+      );
+    }, 4);
 
+
+  }
+
+  private static async loadWithRetries<T>(builder: (() => Promise<T>), retries: number) {
+    while (retries > 0) {
+      try {
+        return await builder();
+      } catch (err) {
+        retries--;
+      }
+    }
+    throw new Error("Can't load page :(");
   }
 
 

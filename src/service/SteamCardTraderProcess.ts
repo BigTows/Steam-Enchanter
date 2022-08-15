@@ -5,11 +5,19 @@ export interface CardOrderOperationContext {
   quantity: number
 }
 
+export enum Status {
+  pending,
+  finished,
+  error
+}
+
 class SteamCardTraderProcess {
   private readonly steamApi: SteamMarketApi;
   private readonly cardOrderOperationContexts: Array<CardOrderOperationContext>;
   private readonly interval: NodeJS.Timer;
   private readonly sessionId: string;
+
+  private currentStatus: Status = Status.pending;
 
   constructor(steamApi: SteamMarketApi, sessionId: string, cardOrderOperationContexts: Array<CardOrderOperationContext>) {
     this.steamApi = steamApi;
@@ -20,13 +28,14 @@ class SteamCardTraderProcess {
     const self = this;
     this.interval = setInterval(async () => {
       await this.checkOrders(self);
-    }, 4000);
+    }, 3000);
   }
 
   private async checkOrders(self: SteamCardTraderProcess) {
-    if (self.cardOrderOperationContexts.length ===0){
-      console.log("Terminate task")
-      clearInterval(self.interval)
+    if (self.cardOrderOperationContexts.length === 0) {
+      console.log("Terminate task");
+      clearInterval(self.interval);
+      this.currentStatus = Status.error;
     }
 
     for (let context of self.cardOrderOperationContexts) {
@@ -36,6 +45,16 @@ class SteamCardTraderProcess {
       }
       console.log(currentStatus.purchased);
     }
+
+    if (self.cardOrderOperationContexts.length === 0) {
+      console.log("Finished task");
+      clearInterval(self.interval);
+      this.currentStatus = Status.finished;
+    }
+  }
+
+  public getCurrentStatus(): Status {
+    return this.currentStatus;
   }
 
   public async cancel() {

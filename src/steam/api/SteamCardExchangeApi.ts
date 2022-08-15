@@ -3,7 +3,7 @@
  */
 import currency from "currency.js";
 
-interface SteamBadgePrice {
+export interface SteamBadgePrice {
   appId: number,
   appName: string,
   price: number
@@ -32,7 +32,7 @@ class SteamCardExchangeApi {
           // metaData[1]; // COUNT
           // metaData[2]; // PRICE DOLLAR
           return {
-            appId: metaData[0][0],
+            appId: parseInt(metaData[0][0]),
             appName: metaData[0][1],
             price: currency(metaData[2]).intValue
           };

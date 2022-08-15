@@ -10,7 +10,7 @@ import ComponentLoader from "./component/ComponentLoader";
 import GameCardExplore from "./component/GameCardExplore";
 import CardBadge from "./component/CardBadge";
 
-export interface CardOrderDetails {
+export interface CardOrderDetail {
   /**
    * Hash name of card
    */
@@ -56,7 +56,7 @@ class GameCardsPage extends SteamPage {
     this.gameAppId = appId;
   }
 
-  public async getCardMarketPage(details: Array<CardOrderDetails>): Promise<CardMarketPage> {
+  public async getCardMarketPage(details: Array<CardOrderDetail>): Promise<CardMarketPage> {
 
     const params = new URLSearchParams();
 
@@ -72,7 +72,7 @@ class GameCardsPage extends SteamPage {
     );
   }
 
-  private findQuantity(cardHashName: string, details: Array<CardOrderDetails>): string {
+  private findQuantity(cardHashName: string, details: Array<CardOrderDetail>): string {
 
     const result = details.find((detail) => {
       return detail.hashName === cardHashName;

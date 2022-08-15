@@ -7,6 +7,7 @@ interface Result {
 }
 
 function updateDataBase(callback?: (response?: Result) => void) {
+  console.log("Update database")
   fetch(`https://www.steamcardexchange.net/api/request.php?GetBadgePrices_Guest`)
     .then((response) => {
         if (response.status !== 200) {
@@ -38,7 +39,7 @@ function processRequest(callback: ((response?: Result) => void) | undefined, res
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 
-    if (request.updateDataBase === true) {
+    if (request.updateDataBase === true || badgePrices === undefined) {
       updateDataBase(sendResponse);
     } else {
       sendResponse(

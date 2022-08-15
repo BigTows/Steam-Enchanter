@@ -12,10 +12,13 @@ class Badges implements SteamElement {
   private readonly badges: Array<BadgeData> = [];
 
   constructor(badgesSheet: HTMLElement) {
-    console.log(badgesSheet);
     for (let badgeRow of badgesSheet.querySelectorAll("div.badge_row") as NodeListOf<HTMLElement>) {
       const linkElement = HtmlUtils.getElementBySelector(badgeRow, "a") as HTMLLinkElement;
       const badgeElement = HtmlUtils.getElementBySelector(badgeRow, "div.badge_content > div.badge_current > div");
+      if (this.isMetallic(linkElement)) {
+        console.log(`App ${linkElement} is metallic, not supported!`);
+        continue;
+      }
       this.badges.push(
         {
           appId: this.getAppIdFromLink(linkElement),
@@ -24,6 +27,10 @@ class Badges implements SteamElement {
       );
     }
 
+  }
+
+  private isMetallic(linkElement: HTMLLinkElement) {
+    return linkElement.href.includes("?border=");
   }
 
 

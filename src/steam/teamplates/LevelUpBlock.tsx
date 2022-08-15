@@ -1,9 +1,27 @@
+import { CardMarketPosition } from "../pages/component/CardBuyerTable";
+
+interface AppElementAction {
+  showProcess: (() => void),
+  finishCalculation: ((details: Array<CardMarketPosition>) => void),
+  initOrder: (() => void),
+  error: (() => void),
+  success: (() => void),
+  changePrice: ((value: string) => void),
+}
+
+enum CurrentState {
+  placeOrder,
+
+}
+
 class LevelUpBlock {
   private static readonly ID_PREFIX = "levelUpBlockTemplate";
   private readonly block: HTMLElement;
   private readonly gamesContainer: HTMLElement;
+  private readonly steamId: string;
 
-  constructor() {
+  constructor(steamId: string) {
+    this.steamId = steamId;
     this.block = document.createElement("div");
     this.block.setAttribute("data-panel", "{\"type\":\"PanelGroup\"}");
     this.block.className = "profile_customization";
@@ -16,7 +34,7 @@ class LevelUpBlock {
 
   private getBaseTemplate() {
     return `
-<div class="profile_customization_header ellipsis">Test</div>
+<div class="profile_customization_header ellipsis">Level up (beta#mvp)</div>
 <div class="profile_customization_block">
   <div class="customtext_showcase">
     <div class="showcase_content_bg showcase_notes">
@@ -57,18 +75,68 @@ class LevelUpBlock {
     this.block.style.display = "";
   }
 
-
-  public addApp(appId: number, appName: string, pricePerBadge: number, onClick: ((this: GlobalEventHandlers, ev: MouseEvent) => any) | null) {
+  /**
+   * TODO Move to react, fuck this self-made reactive
+   * @param appId
+   * @param appName
+   * @param pricePerBadge
+   * @param onCalculation
+   * @param onBuy
+   */
+  public addApp(appId: number, appName: string,
+                onCalculation: ((actions: AppElementAction) => void),
+                onBuy: ((positions: Array<CardMarketPosition>, callbacks: AppElementAction) => void),
+  ) {
     const appElement = document.createElement("tr");
-    appElement.innerHTML = this.appElementTemplate(appId, appName, pricePerBadge);
+    appElement.innerHTML = this.appElementTemplate(appId, appName);
+    //shit -- start
+    const calculateButton = (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}Calculate`)[0] as HTMLElement);
+    const placeOrderButton = (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}placeOrder`)[0] as HTMLElement);
+    const waiting = (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}waiting`)[0] as HTMLElement);
+    const success = (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}success`)[0] as HTMLElement);
+    const error = (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}error`)[0] as HTMLElement);
+    const price = (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}price`)[0] as HTMLElement);
 
-    (appElement.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}${appId}placeOrder`)[0] as HTMLElement).onclick = onClick;
+    const callbacks: AppElementAction = {
+      showProcess: (): void => {
+        calculateButton.style.display = "none";
+        placeOrderButton.style.display = "none";
+        waiting.style.display = "";
+      },
+      initOrder: (): void => {
+        placeOrderButton.style.display = "none";
+      },
+      finishCalculation: (positions: Array<CardMarketPosition>): void => {
+        waiting.style.display = "none";
+        placeOrderButton.style.display = "";
+        placeOrderButton.onclick = function() {
+          onBuy(positions, callbacks);
+        };
+      },
+      changePrice: (value: string): void => {
+        price.innerText = value;
+      },
+      success: () => {
+        waiting.style.display = "none";
+        success.style.display = "";
+      },
+      error: () => {
+        waiting.style.display = "none";
+        error.style.display = "";
+      }
+    };
+
+      calculateButton.onclick = function() {
+        onCalculation(callbacks);
+      };
+
+    //shit -- still
+
     this.gamesContainer.appendChild(appElement);
   }
 
 
-
-  private appElementTemplate(appId: number, appName: string, pricePerBadge: number) {
+  private appElementTemplate(appId: number, appName: string) {
     return `
 <td>
                               <div style="display: table">
@@ -77,7 +145,7 @@ class LevelUpBlock {
                                   <span class="market_multi_itemname economy_item_hoverable"
                                         style=" float: right; display: table;">
 <a class="market_listing_item_name_link"
-                   href="https://store.steampowered.com/app/${appId}">
+                   href="https://steamcommunity.com/profiles/${this.steamId}/gamecards/${appId}">
                    
                    
  <p style="
@@ -91,7 +159,7 @@ class LevelUpBlock {
                               </td>
                               <td>
                                 <span class="market_dialog_input market_multi_price">
-<span id="market_multibuy_order_total">${pricePerBadge}
+<span id="market_multibuy_order_total"><span class="${LevelUpBlock.ID_PREFIX}${appId}price">XXX</span>
             <span class="market_whatsthis" title="This is the most you can end up spending as a result of this buy order.
 Items will be purchased at the cheapest price available, so the order may end up costing less than this amount.">(?)</span>
           </span>
@@ -102,8 +170,11 @@ Items will be purchased at the cheapest price available, so the order may end up
                                 <div class="market_multi_status">
                                   <a id="market_multibuy_purchase"
                                      class="btn_green_white_innerfade btn_medium_wide btn_uppercase market_unstyled_button"
-                                     style=""><span class="${LevelUpBlock.ID_PREFIX}${appId}placeOrder">PLACE ORDER</span></a>
-                                  <div class="market_multi_throbber" style="display: none">
+                                     style=""><span class="${LevelUpBlock.ID_PREFIX}${appId}Calculate">Calculate</span></a>
+                                   <a id="market_multibuy_purchase"
+                                     class="btn_green_white_innerfade btn_medium_wide btn_uppercase market_unstyled_button"
+                                     style=""><span class="${LevelUpBlock.ID_PREFIX}${appId}placeOrder" style="display: none">PLACE ORDER</span></a>
+                                  <div class="market_multi_throbber ${LevelUpBlock.ID_PREFIX}${appId}waiting"  style="display: none">
                                     <div class="LoadingWrapper">
                                       <div class="LoadingThrobber" style="height: 50px; margin-top: 17px;">
                                         <div class="Bar Bar1"></div>
@@ -112,12 +183,12 @@ Items will be purchased at the cheapest price available, so the order may end up
                                       </div>
                                     </div>
                                   </div>
-                                  <span id="buy_176139861_success" class="market_multi_warning"
+                                  <span class="market_multi_warning ${LevelUpBlock.ID_PREFIX}${appId}success" 
                                         style="display: none">✔️</span>
-                                  <span id="buy_176139861_error"
-                                        class="market_multi_warning market_multi_warning_withimg" style="display: none"><img
+                                  <span
+                                        class="market_multi_warning market_multi_warning_withimg ${LevelUpBlock.ID_PREFIX}${appId}error"  style="display: none"><img
                                     src="https://community.akamai.steamstatic.com/public/images/economy/market/icon_alertlistings.png"></span>
-                                  <span id="buy_176139861_warning" class="market_multi_warning"
+                                  <span class="market_multi_warning"
                                         style="display: none">⚠️</span>
                                 </div>
                               </td>
