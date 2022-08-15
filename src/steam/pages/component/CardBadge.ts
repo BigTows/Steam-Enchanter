@@ -5,7 +5,6 @@ class CardBadge {
 
 
   constructor(badge: HTMLElement) {
-    console.log(badge)
     this.level = this.badgeExists(badge) ? this.processBadgeLevel(badge) : 0;
   }
 
@@ -18,6 +17,12 @@ class CardBadge {
     const levelOfBadgeElement = HtmlUtils.getElementBySelector(badge, "div.badge_info_description > div:nth-child(2)");
 
     const levelContext = levelOfBadgeElement.innerText;
+
+    if (!levelContext.includes(',')){
+      console.log("Infinity badge")
+      return 0;
+    }
+
     const numArrRaw = levelContext.match(/[\d\.]+/g);
     if (numArrRaw === null || numArrRaw.length < 1) {
       throw new Error("Can't find badge level.");
@@ -25,7 +30,8 @@ class CardBadge {
     const numbers = numArrRaw.filter(n => n !== ".").map(value => parseInt(value));
     const level = numbers[0];//Because it's first
 
-    if (level < 1 || level > 5) {
+    if (level < 1) {
+      console.error(badge)
       throw new Error(`Found incorrect level ${level}`)
     }
     return level;

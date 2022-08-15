@@ -67,6 +67,7 @@ class LevelUpBlock {
   }
 
 
+
   private appElementTemplate(appId: number, appName: string, pricePerBadge: number) {
     return `
 <td>

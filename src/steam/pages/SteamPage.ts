@@ -12,7 +12,7 @@ export interface SteamPageConfiguration {
    */
   selector: string,
 
-  component: ComponentLoader | undefined
+  component?: ComponentLoader
 }
 
 interface ElementData {

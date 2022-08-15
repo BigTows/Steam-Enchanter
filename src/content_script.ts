@@ -1,8 +1,7 @@
 import SteamCardExchangeApi from "./steam/api/SteamCardExchangeApi";
 import LevelUpBlock from "./steam/teamplates/LevelUpBlock";
 import SteamPageLoader from "./steam/pages/SteamPageLoader";
-import SteamCardTraderService from "./service/SteamCardTraderService";
-import { CardOrderDetails } from "./steam/pages/GameCardsPage";
+import UserCompletedBadgesPage from "./steam/pages/UserCompletedBadgesPage";
 
 const elements = document.getElementsByClassName("profile_header_actions");
 
@@ -23,33 +22,33 @@ if (elements.length !== 0) {
   button.href = "#";
 
   levelUpBlock.show();
-
-  new SteamCardExchangeApi().getLoad().then(async steamBadges => {
-
-
-    for (let i = 0; i < 8; i++) {
-      const gameCardsPage = await SteamPageLoader.loadGameCard(steamId, steamBadges[i].appId);
-      if (gameCardsPage.getLevelBadge() < 5) {
-        levelUpBlock.addApp(steamBadges[i].appId, steamBadges[i].appName, steamBadges[i].price, () => {
-
-console.log("assa")
-          const details: Array<CardOrderDetails> = gameCardsPage.getGameCards().map(gameCard => {
-            return {
-              hashName: gameCard.hashName,
-              quantity: (5 - gameCardsPage.getLevelBadge() - gameCard.count)
-            };
-          });
-
-          gameCardsPage.getCardMarketPage(details).then(page => {
-
-            new SteamCardTraderService().createTrader(
-              page.getCards()
-            );
-          });
-        });
-      }
-    }
-  });
+//
+//   new SteamCardExchangeApi().getLoad().then(async steamBadges => {
+//
+//
+//     for (let i = 0; i < 8; i++) {
+//       const gameCardsPage = await SteamPageLoader.loadGameCard(steamId, steamBadges[i].appId);
+//       if (gameCardsPage.getLevelBadge() < 5) {
+//         levelUpBlock.addApp(steamBadges[i].appId, steamBadges[i].appName, steamBadges[i].price, () => {
+//
+// console.log("assa")
+//           const details: Array<CardOrderDetails> = gameCardsPage.getGameCards().map(gameCard => {
+//             return {
+//               hashName: gameCard.hashName,
+//               quantity: (5 - gameCardsPage.getLevelBadge() - gameCard.count)
+//             };
+//           });
+//
+//           gameCardsPage.getCardMarketPage(details).then(page => {
+//
+//             new SteamCardTraderService().createTrader(
+//               page.getCards()
+//             );
+//           });
+//         });
+//       }
+//     }
+//   });
 
 
   button.onclick = function() {
@@ -72,6 +71,19 @@ console.log("assa")
 new SteamCardExchangeApi().getLoad().then(a => {
   console.log(a);
 });
+
+
+SteamPageLoader.loadUserCompletedBadges(steamId, 1).then(page => {
+  p(page);
+});
+
+
+async function p(page: UserCompletedBadgesPage) {
+  console.log(page.getBadges())
+  if (page.hasNextPage()) {
+    p(await page.nextPage());
+  }
+}
 
 
 const owner = 3;

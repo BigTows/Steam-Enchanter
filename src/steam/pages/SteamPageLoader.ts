@@ -1,6 +1,7 @@
 import GameCardsPage from "./GameCardsPage";
 import axios from "axios";
 import CardMarketPage from "./CardMarketPage";
+import UserCompletedBadgesPage from "./UserCompletedBadgesPage";
 
 class SteamPageLoader {
 
@@ -12,10 +13,18 @@ class SteamPageLoader {
 
 
   public static async loadCardMarketPage(link: string): Promise<CardMarketPage> {
-    console.log(link);
     return new CardMarketPage(
       await SteamPageLoader.loadPage(link)
     );
+  }
+
+  public static async loadUserCompletedBadges(steamId: string, page: number): Promise<UserCompletedBadgesPage> {
+
+    return new UserCompletedBadgesPage(
+      await SteamPageLoader.loadPage(`https://steamcommunity.com/profiles/${steamId}/badges/?sort=c&p=${page}`),
+      steamId, page
+    );
+
   }
 
 
