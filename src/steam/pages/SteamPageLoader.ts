@@ -20,7 +20,7 @@ class SteamPageLoader {
       return new CardMarketPage(
         await SteamPageLoader.loadPage(link)
       );
-    }, 4);
+    }, 6);
   }
 
   public static async loadUserCompletedBadges(steamId: string, page: number): Promise<UserCompletedBadgesPage> {
@@ -41,6 +41,7 @@ class SteamPageLoader {
         return await builder();
       } catch (err) {
         retries--;
+        await new Promise(s => setTimeout(s, 500));
       }
     }
     throw new Error("Can't load page :(");
