@@ -23,9 +23,6 @@ class SteamCardExchangeApi {
   async getLoad(): Promise<Array<SteamBadgePrice>> {
     return new Promise<Array<SteamBadgePrice>>((resolve) => {
       chrome.runtime.sendMessage({}, (response: any) => {
-
-        console.log(response)
-
         const result = response.data.map((metaData: Array<any>) => {
           // metaData[0][0];// APP-ID
           // metaData[0][1];// APP-Name

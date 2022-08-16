@@ -16,6 +16,22 @@
         "https://steamcommunity.com/id/*",
         "https://steamcommunity.com/profiles/*"
       ],
+      "exclude_matches": [
+        "https://steamcommunity.com/id/*/home*",
+        "https://steamcommunity.com/profiles/*/home*",
+        "https://steamcommunity.com/id/*/friends*",
+        "https://steamcommunity.com/profiles/*/friends*",
+        "https://steamcommunity.com/id/*/groups*",
+        "https://steamcommunity.com/profiles/*/groups*",
+        "https://steamcommunity.com/id/*/screenshots*",
+        "https://steamcommunity.com/profiles/*/screenshots*",
+        "https://steamcommunity.com/id/*/badges*",
+        "https://steamcommunity.com/profiles/*/badges*",
+        "https://steamcommunity.com/id/*/inventory*",
+        "https://steamcommunity.com/profiles/*/inventory*",
+        "https://steamcommunity.com/id/*/friends*",
+        "https://steamcommunity.com/profiles/*/friends*"
+      ],
       "js": [
         "js/vendor.js",
         "js/content_script.js"
@@ -26,7 +42,8 @@
     "service_worker": "js/background.js"
   },
   "permissions": [
-    "storage", "activeTab"
+    "storage",
+    "activeTab"
   ],
   "host_permissions": [
     "<all_urls>"

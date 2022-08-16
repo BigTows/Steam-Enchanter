@@ -50,12 +50,6 @@ class SteamMarketApi {
         return JSON.parse(data);
       }]
     });
-    // axiosRetry(this.httpClient, {
-    //   retries: 4,
-    //   retryCondition: (error) => {
-    //
-    //   }
-    // });
   }
 
   /**
