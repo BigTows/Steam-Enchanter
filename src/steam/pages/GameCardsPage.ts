@@ -7,7 +7,7 @@ import SteamPage, { SteamPageConfiguration } from "./SteamPage";
 import SteamPageLoader from "./SteamPageLoader";
 import CardMarketPage from "./CardMarketPage";
 import ComponentLoader from "./component/ComponentLoader";
-import GameCardExplore from "./component/GameCardExplore";
+import GameCardExplore, { GameCard } from "./component/GameCardExplore";
 import CardBadge from "./component/CardBadge";
 
 export interface CardOrderDetail {
@@ -61,22 +61,36 @@ class GameCardsPage extends SteamPage {
 
 
   private loadGameCardMeta(dom: HTMLElement): Array<GameCardMeta> {
-    const ownedCards = this.getComponentElement<GameCardExplore>(Elements.cards).getGameCards();
+    const badgeCardStatus = this.getComponentElement<GameCardExplore>(Elements.cards).getGameCards();
 
     const hashes = this.findHashesFromLink(dom.querySelector("div.badge_cards_to_collect > div.gamecards_inventorylink > a") as HTMLLinkElement);
-    return ownedCards.map((ownedCard) => {
+
+
+    const countEquals = this.userHashSameCountOfCards(badgeCardStatus);
+
+    return badgeCardStatus.map((ownedCard, index) => {
       const approximateHash = `${this.gameAppId}-${ownedCard.name}`;
-
-      const hashName = hashes.find((hash) => {
-        return hash.includes(approximateHash, 0);
-      }) ?? approximateHash;
-
+      let hashName;
+      if (countEquals) {
+        hashName = hashes[index] ?? approximateHash;
+      } else {
+        hashName = hashes.find((hash) => {
+          return hash.includes(approximateHash, 0);
+        }) ?? approximateHash;
+      }
       return <GameCardMeta>{
         name: ownedCard.name,
         hashName: hashName,
         count: ownedCard.count
       };
     });
+  }
+
+  private userHashSameCountOfCards(badgeCardStatus: Array<GameCard>): boolean {
+    const sorted = badgeCardStatus.sort((left: GameCard, right: GameCard) => {
+      return left.count - right.count;
+    });
+    return sorted[0].count === sorted[sorted.length - 1].count;
   }
 
   /**

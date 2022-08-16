@@ -144,12 +144,12 @@ class LevelUpBlock {
                                        class="market_listing_item_img economy_item_hoverable" alt="">
                                   <span class="market_multi_itemname economy_item_hoverable"
                                         style=" float: right; display: table;">
-<a class="market_listing_item_name_link"
+<a class="market_listing_item_name_link" target="_blank"
                    href="https://steamcommunity.com/profiles/${this.steamId}/gamecards/${appId}">
                    
                    
  <p style="
-  max-width: 30ch;
+  max-width: 25ch;
   text-overflow: ellipsis;
   overflow:hidden;
   white-space: nowrap;">${appName}</p>

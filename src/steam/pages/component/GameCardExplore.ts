@@ -1,6 +1,6 @@
 import SteamElement from "./SteamElement";
 
-interface GameCard {
+export interface GameCard {
   name: string,
   count: number
 }
