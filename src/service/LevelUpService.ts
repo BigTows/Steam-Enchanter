@@ -47,18 +47,15 @@ class LevelUpService {
                 hashName: gameCard.hashName,
                 quantity: (5 - page.getLevelBadge() - gameCard.count)
               };
+            }).filter(cardOrderDetails => {
+              return cardOrderDetails.quantity > 0;
             });
+
+            console.log(details)
 
             actions.showProcess();
 
             page.getCardMarketPage(details).then(page => {
-
-              console.log(
-                page.getCards().reduce((accumulator, currentValue) => {
-                  return accumulator + currentValue.price * currentValue.quantity;
-                }, 0)
-              );
-
               actions.changePrice(
                 currency(page.getCards().reduce((accumulator, currentValue) => {
                   return accumulator + currentValue.price * currentValue.quantity;
@@ -68,6 +65,7 @@ class LevelUpService {
                   symbol: page.getCurrency().symbol
                 })
               );
+              console.log(page.getCards())
               actions.finishCalculation(page.getCards());
             }).catch(err => {
               console.log(err);

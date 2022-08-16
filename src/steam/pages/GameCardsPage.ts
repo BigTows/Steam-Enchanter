@@ -51,9 +51,45 @@ class GameCardsPage extends SteamPage {
   ];
   private readonly gameAppId: number;
 
+  private readonly gameCardMetaList: Array<GameCardMeta>;
+
   constructor(root: HTMLElement, appId: number) {
     super(root, GameCardsPage.configuration);
     this.gameAppId = appId;
+    this.gameCardMetaList = this.loadGameCardMeta(root);
+  }
+
+
+  private loadGameCardMeta(dom: HTMLElement): Array<GameCardMeta> {
+    const ownedCards = this.getComponentElement<GameCardExplore>(Elements.cards).getGameCards();
+
+    const hashes = this.findHashesFromLink(dom.querySelector("div.badge_cards_to_collect > div.gamecards_inventorylink > a") as HTMLLinkElement);
+    return ownedCards.map((ownedCard) => {
+      const approximateHash = `${this.gameAppId}-${ownedCard.name}`;
+
+      const hashName = hashes.find((hash) => {
+        return hash.includes(approximateHash, 0);
+      }) ?? approximateHash;
+
+      return <GameCardMeta>{
+        name: ownedCard.name,
+        hashName: hashName,
+        count: ownedCard.count
+      };
+    });
+  }
+
+  /**
+   * Try to find link with real hash name of cards.
+   * This need because sometimes `Steam` use postfix `(Trading Card)` for some cards. (I don't understand that thing ;/)
+   * @private
+   */
+  private findHashesFromLink(linkElement: HTMLLinkElement | null): Array<string> {
+    if (linkElement === null) {
+      return [];
+    }
+    const link = new URL(linkElement.href);
+    return link.searchParams.getAll("items[]");
   }
 
   public async getCardMarketPage(details: Array<CardOrderDetail>): Promise<CardMarketPage> {
@@ -62,9 +98,9 @@ class GameCardsPage extends SteamPage {
 
     params.append("appid", GameCardsPage.STEAM_CARD_APP_ID);
 
-    this.getGameCards().forEach((gameCard) => {
-      params.append("items[]", gameCard.hashName);
-      params.append("qty[]", this.findQuantity(gameCard.hashName, details));
+    details.forEach((detail) => {
+      params.append("items[]", detail.hashName);
+      params.append("qty[]", `${detail.quantity}`);
     });
 
     return await SteamPageLoader.loadCardMarketPage(
@@ -72,27 +108,9 @@ class GameCardsPage extends SteamPage {
     );
   }
 
-  private findQuantity(cardHashName: string, details: Array<CardOrderDetail>): string {
-
-    const result = details.find((detail) => {
-      return detail.hashName === cardHashName;
-    });
-    if (result === undefined) {
-      return "0";
-    }
-    return result.quantity + "";
-  }
-
 
   public getGameCards(): Array<GameCardMeta> {
-    const ownedCards = this.getComponentElement<GameCardExplore>(Elements.cards).getGameCards();
-    return ownedCards.map((ownedCard) => {
-      return <GameCardMeta>{
-        name: ownedCard.name,
-        hashName: `${this.gameAppId}-${ownedCard.name}`,
-        count: ownedCard.count
-      };
-    });
+    return this.gameCardMetaList;
   }
 
   public getLevelBadge(): number {
