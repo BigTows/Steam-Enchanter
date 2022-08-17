@@ -39,6 +39,7 @@ jobs:
 
       - name: Building..
         run: |
+          cat package.json | jq .version
           npm install
           npm run build
 
