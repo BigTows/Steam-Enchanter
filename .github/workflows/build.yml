@@ -28,7 +28,7 @@ jobs:
           npm run test
   build:
     runs-on: ubuntu-latest
-    needs: test
+    #needs: test
     steps:
       - uses: actions/checkout@v3
 
@@ -42,7 +42,9 @@ jobs:
           echo "VERSION=$(cat package.json | jq .version)"
           npm install
           npm run build
-
+      - name: Test
+        run: |
+          echo $VERSION
       - name: Prerelease
         uses: marvinpinto/action-automatic-releases@latest
         with:
