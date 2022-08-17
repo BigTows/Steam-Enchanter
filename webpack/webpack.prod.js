@@ -24,20 +24,6 @@ module.exports = merge(common, {
                                 },
                             },
                         },
-                        {
-                            source: './src', destination: `./build/${process.env.npm_package_name}-${process.env.npm_package_version}-source.zip`,
-                            format: 'zip',
-                            options: {
-                                gzip: true,
-                                gzipOptions: {
-                                    level: 1,
-                                },
-                                globOptions: {
-                                    // https://github.com/Yqnn/node-readdir-glob#options
-                                    dot: true,
-                                },
-                            },
-                        },
                     ],
                 },
             },
