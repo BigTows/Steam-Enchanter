@@ -39,7 +39,7 @@ jobs:
 
       - name: Building..
         run: |
-          echo "VERSION=$(cat package.json | jq .version)"
+          echo "VERSION=$(cat package.json | jq .version)" >> $GITHUB_ENV
           npm install
           npm run build
       - name: Test
