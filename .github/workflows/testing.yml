@@ -1,8 +1,7 @@
-name: NodeJS Pu
+name: Testing
 
 on:
-  push:
-    branches: ["develop"]
+  workflow_call:
   pull_request:
     branches: ["main"]
 jobs:
