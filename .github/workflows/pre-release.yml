@@ -20,15 +20,14 @@ jobs:
       - name: Building..
         run: |
           echo "VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_ENV
-          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
           npm install
           npm run build
       - name: Prerelease
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "${{ env.VERSION }}#${{ env.SHORT_SHA }}"
+          automatic_release_tag: "latest"
           prerelease: true
-          title: "Development Build"
+          title: "Development Build ${{ env.VERSION }}"
           files: |
             build/*.zip
