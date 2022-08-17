@@ -44,7 +44,7 @@ jobs:
           npm run build
       - name: Test
         run: |
-          echo $VERSION
+          echo ${{ env.VERSION }}
       - name: Prerelease
         uses: marvinpinto/action-automatic-releases@latest
         with:
