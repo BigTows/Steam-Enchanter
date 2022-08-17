@@ -4,7 +4,8 @@ This is extension for Google Chrome browsers.
 ## Features
  
  ### Automated purchase of cards for not unlocked Badges.
-![demo_1](https://user-images.githubusercontent.com/9078504/185050491-1ed3aebc-8bed-426d-8a1d-c312defd23fe.gif)
+![demo_1](https://user-images.githubusercontent.com/9078504/185050869-ce2b188d-1955-4bf7-b0cd-bf6f87bc0a7b.gif)
+
 
 
 
