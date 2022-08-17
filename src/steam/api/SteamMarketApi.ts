@@ -34,10 +34,11 @@ class SteamMarketApi {
   private httpClient: Axios;
   private static STEAM: string = "https://steamcommunity.com";
 
-  private static readonly COUNT_RETRIES = 3;
+  private static readonly COUNT_RETRIES = 6;
 
   private static readonly STEAM_RETRIES_CODES = [
     40,//Tod many request
+    42,//Tod many request
     107//Извините! Серверы Steam не ответили на запрос о ва…полнен. Если это не так, повторите попытку позже.
   ];
 
@@ -78,7 +79,8 @@ class SteamMarketApi {
     if (result.data.success === 1) {
       return result.data.buy_orderid;
     } else if (SteamMarketApi.STEAM_RETRIES_CODES.includes(result.data.success) && retries > 1) {
-      return this.delayAndExecute<string>(this.executeCreateOrderWithRetries(request, retries - 1));
+      await new Promise(s => setTimeout(s, 1500));
+      return await this.executeCreateOrderWithRetries(request, retries - 1)
     }
     throw new Error("Can't place order at Steam :(");
   }
@@ -118,10 +120,6 @@ class SteamMarketApi {
     if (result.data.success !== 1) {
       throw new Error("Can't cancel order at Steam :(");
     }
-  }
-
-  private delayAndExecute<T>(task: Promise<T>): Promise<T> {
-    return new Promise(resolve => setTimeout(() => resolve(task), 1250));
   }
 
 }

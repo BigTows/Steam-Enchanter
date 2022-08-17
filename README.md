@@ -12,4 +12,4 @@ This is extension for Google Chrome browsers.
 
 
 ## Special thanks to
-[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)
+[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)>
