@@ -30,7 +30,13 @@
         "https://steamcommunity.com/id/*/inventory*",
         "https://steamcommunity.com/profiles/*/inventory*",
         "https://steamcommunity.com/id/*/friends*",
-        "https://steamcommunity.com/profiles/*/friends*"
+        "https://steamcommunity.com/profiles/*/friends*",
+        "https://steamcommunity.com/id/*/images*",
+        "https://steamcommunity.com/profiles/*/images*",
+        "https://steamcommunity.com/id/*/videos*",
+        "https://steamcommunity.com/profiles/*/videos*",
+        "https://steamcommunity.com/id/*/myworkshopfiles*",
+        "https://steamcommunity.com/profiles/*/myworkshopfiles*"
       ],
       "js": [
         "js/vendor.js",
