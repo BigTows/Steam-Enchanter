@@ -39,7 +39,6 @@ jobs:
 
       - name: Building..
         run: |
-          ls 
           npm install
           npm run build
 

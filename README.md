@@ -1,11 +1,13 @@
-# Steam
+# TODO CHANGE NAMESteam
+This is extension for Google Chrome browsers.
+
+## Features
+ 
+ ### Automated purchase of cards for not unlocked Badges.
+     <IMAGE>
 
 
-Codes to retry:
- - [ ] 40
- - [ ] xxx
 
 
-Some trash: 
- - https://steamcommunity.com/id/bigtows/gamecards/521430/
- - https://steamcommunity.com/id/bigtows/gamecards/485490/
+## Special thanks to
+[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)
