@@ -43,10 +43,7 @@
   "background": {
     "service_worker": "js/background.js"
   },
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
+  "permissions": [],
   "host_permissions": [
     "<all_urls>"
   ]

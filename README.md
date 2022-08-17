@@ -1,5 +1,5 @@
-# TODO CHANGE NAMESteam
-This is extension for Google Chrome browsers.
+# Steam Enchanter
+This is extension of Google Chrome browsers for [Steam](https://store.steampowered.com) users. Automate processes for getting badges.
 
 ## Features
  
