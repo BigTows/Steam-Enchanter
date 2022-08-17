@@ -2,7 +2,7 @@ import { CardMarketPosition } from "../pages/component/CardBuyerTable";
 
 interface AppElementAction {
   showProcess: (() => void),
-  finishCalculation: ((details: Array<CardMarketPosition>) => void),
+  finishCalculation: ((details: Array<CardMarketPosition>, currencyId: number) => void),
   initOrder: (() => void),
   error: (() => void),
   success: (() => void),
@@ -85,7 +85,7 @@ class LevelUpBlock {
    */
   public addApp(appId: number, appName: string,
                 onCalculation: ((actions: AppElementAction) => void),
-                onBuy: ((positions: Array<CardMarketPosition>, callbacks: AppElementAction) => void),
+                onBuy: ((positions: Array<CardMarketPosition>, currencyId:number, callbacks: AppElementAction) => void),
   ) {
     const appElement = document.createElement("tr");
     appElement.innerHTML = this.appElementTemplate(appId, appName);
@@ -106,11 +106,11 @@ class LevelUpBlock {
       initOrder: (): void => {
         placeOrderButton.style.display = "none";
       },
-      finishCalculation: (positions: Array<CardMarketPosition>): void => {
+      finishCalculation: (positions: Array<CardMarketPosition>, currencyId: number): void => {
         waiting.style.display = "none";
         placeOrderButton.style.display = "";
         placeOrderButton.onclick = function() {
-          onBuy(positions, callbacks);
+          onBuy(positions,currencyId, callbacks);
         };
       },
       changePrice: (value: string): void => {

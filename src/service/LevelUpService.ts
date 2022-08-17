@@ -66,7 +66,7 @@ class LevelUpService {
                 })
               );
               console.log(page.getCards())
-              actions.finishCalculation(page.getCards());
+              actions.finishCalculation(page.getCards(), page.getCurrency().id);
             }).catch(err => {
               console.log(err);
               actions.error();
@@ -76,10 +76,11 @@ class LevelUpService {
             console.log(err);
           });
 
-        }, (order: Array<CardMarketPosition>, actions) => {
+        }, (order: Array<CardMarketPosition>, currencyId: number, actions) => {
           actions.showProcess();
           new SteamCardTraderService().createTrader(
-            order
+            order,
+            currencyId
           ).then(a => {
             const interval = setInterval(() => {
               if (a.getCurrentStatus() === Status.finished) {
