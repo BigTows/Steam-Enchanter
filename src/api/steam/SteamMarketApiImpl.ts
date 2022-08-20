@@ -68,24 +68,18 @@ class SteamMarketApiImpl implements SteamMarketApi {
   public async getOrderStatus(sessionId: string, orderId: string): Promise<OrderStatusResponse> {
     const resultRaw = await this.httpClient.get<OrderStatusResponseRaw>(`${this.steamHost}/market/getbuyorderstatus/?sessionid=${sessionId}&buy_orderid=${orderId}`);
 
-    const result: OrderStatusResponse = {
+
+    if (resultRaw.success !== 1) {
+      throw new Error("Can't get order status at Steam :(");
+    }
+
+    return {
       success: resultRaw.success === 1,
       active: resultRaw.active === 1,
       purchased: resultRaw.purchased,
       quantity: parseInt(resultRaw.quantity),
       quantityRemaining: parseInt(resultRaw.quantity_remaining)
     };
-    console.log(resultRaw);
-
-    console.log(result);
-    //TODO Errors?
-
-
-    if (result.success) {
-      return result;
-    }
-    throw new Error("Can't get order status at Steam :(");
-
   }
 
   public async cancelOrder(sessionId: string, orderId: string): Promise<void> {
@@ -96,7 +90,7 @@ class SteamMarketApiImpl implements SteamMarketApi {
 
     const result = await this.httpClient.post(`${this.steamHost}/market/cancelbuyorder/`, data);
 
-    if (result.data.success !== 1) {
+    if (result.success !== 1) {
       throw new Error("Can't cancel order at Steam :(");
     }
   }
