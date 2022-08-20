@@ -18,4 +18,8 @@ class ResourceHelper {
   }
 }
 
+test('hehe',()=>{
+
+})
+
 export default ResourceHelper;
