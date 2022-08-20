@@ -7,6 +7,7 @@ import currency from "currency.js";
 import { CardMarketPosition } from "../steam/pages/component/CardBuyerTable";
 import SteamCardTraderService from "./SteamCardTraderService";
 import { Status } from "./SteamCardTraderProcess";
+import { injector } from "../configuration/Injector";
 
 class LevelUpService {
   private readonly exchangeApi: SteamCardExchangeApi = new SteamCardExchangeApi();
@@ -78,7 +79,8 @@ class LevelUpService {
 
         }, (order: Array<CardMarketPosition>, currencyId: number, actions) => {
           actions.showProcess();
-          new SteamCardTraderService().createTrader(
+
+          injector.resolve(SteamCardTraderService).createTrader(
             order,
             currencyId
           ).then(a => {

@@ -1,7 +1,7 @@
+import "reflect-metadata";
 import LevelUpBlock from "./steam/teamplates/LevelUpBlock";
 import LevelUpService from "./service/LevelUpService";
 import HtmlUtils from "./steam/utils/HtmlUtils";
-
 
 const steamId: string = JSON.parse((HtmlUtils.getElementBySelector(document.body, "#webui_config")).getAttribute("data-userinfo") as string).steamid;
 const levelUpBlock = new LevelUpBlock(steamId);

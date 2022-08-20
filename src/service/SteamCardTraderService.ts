@@ -1,24 +1,24 @@
-import axios, { Axios } from "axios";
 import SteamCardTraderProcess, { CardOrderOperationContext } from "./SteamCardTraderProcess";
 import { CardMarketPosition } from "../steam/pages/component/CardBuyerTable";
 import Cookies from "js-cookie";
-import SteamMarketApi from "../steam/api/SteamMarketApi";
+import { inject, injectable } from "tsyringe";
+import SteamMarketApi from "../api/steam/SteamMarketApi";
+import { Tokens } from "../configuration/Injector";
 
 interface TradeOptions {
 
 }
 
+@injectable()
 class SteamCardTraderService {
-  private readonly httpClient: Axios;
+  private readonly steamMarketApi: SteamMarketApi;
 
-  constructor() {
-    //TODO axios
-    this.httpClient = axios;
+  constructor(@inject(Tokens.STEAM_MARKET_API) steamMarketApi: SteamMarketApi) {
+    this.steamMarketApi = steamMarketApi;
   }
 
 
   public async createTrader(positions: Array<CardMarketPosition>, currencyId: number): Promise<SteamCardTraderProcess> {
-    const api = new SteamMarketApi();
     const sessionId = this.getSessionId();
 
     const cardOrderOperationContexts: Array<CardOrderOperationContext> = [];
@@ -34,15 +34,14 @@ class SteamCardTraderService {
       );
 
     }
-    return new SteamCardTraderProcess(api, sessionId, cardOrderOperationContexts);
+    return new SteamCardTraderProcess(this.steamMarketApi, sessionId, cardOrderOperationContexts);
   }
 
 
   private async createOrder(sessionId: string, position: CardMarketPosition, currencyId: number): Promise<string> {
-    const api = new SteamMarketApi();
     const maximumOverprice = 200;// TODO 200 is maximum overprice for position, move to options.
 
-    return await api.createOrder({
+    return await this.steamMarketApi.createOrder({
       sessionId: sessionId,
       currency: currencyId,
       appId: position.appId,
