@@ -7,9 +7,9 @@
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
-    "test": "npx jest"
+    "test": "npx jest --coverage"
   },
-  "author": "",
+  "author": "Alexander <bigtows> Chapchuk",
   "license": "MIT",
   "repository": {
     "type": "git",
