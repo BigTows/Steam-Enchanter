@@ -1,9 +1,9 @@
 module.exports = {
-    "roots": [
-        "src"
-    ],
-    "transform": {
+    roots: ["src"],
+    transform: {
         "^.+\\.ts$": "ts-jest"
     },
-    "testEnvironment": 'jsdom'
+    testEnvironment: 'jsdom',
+    collectCoverage: true,
+    coverageReporters: ['text', 'cobertura'],
 }; 
