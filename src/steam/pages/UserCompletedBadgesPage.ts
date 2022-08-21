@@ -14,7 +14,7 @@ class UserCompletedBadgesPage extends SteamPage {
   private static readonly configuration: Array<SteamPageConfiguration> = [
     {
       name: Elements.badges,
-      selector: " div.badges_sheet",
+      selector: "div.badges_sheet",
       component: new ComponentLoader(Badges)
     }
   ];
@@ -24,6 +24,12 @@ class UserCompletedBadgesPage extends SteamPage {
   private readonly currentPage: number;
   private readonly lastPage: number;
 
+  /**
+   *
+   * @param root
+   * @param steamId TODO REMOVE...
+   * @param currentPage
+   */
   constructor(root: HTMLElement, steamId: string, currentPage: number) {
     super(root, UserCompletedBadgesPage.configuration);
     this.steamId = steamId;
@@ -45,6 +51,7 @@ class UserCompletedBadgesPage extends SteamPage {
     if (!this.hasNextPage()) {
       throw new Error("No more pages.");
     }
+    //TODO SteamPageLoader to another place
     return SteamPageLoader.loadUserCompletedBadges(this.steamId, this.currentPage + 1);
   }
 

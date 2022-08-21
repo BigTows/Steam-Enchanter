@@ -16,7 +16,7 @@ class CardBadge {
   private processBadgeLevel(badge: HTMLElement): number {
     const levelOfBadgeElement = HtmlUtils.getElementBySelector(badge, "div.badge_info_description > div:nth-child(2)");
 
-    const levelContext = levelOfBadgeElement.innerText;
+    const levelContext = levelOfBadgeElement.innerText ?? levelOfBadgeElement.textContent;
 
     if (!levelContext.includes(',')){
       console.log("Infinity badge")

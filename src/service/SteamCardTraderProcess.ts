@@ -1,4 +1,4 @@
-import SteamMarketApi from "../steam/api/SteamMarketApi";
+import SteamMarketApi from "../api/steam/SteamMarketApi";
 
 export interface CardOrderOperationContext {
   orderId: string,
