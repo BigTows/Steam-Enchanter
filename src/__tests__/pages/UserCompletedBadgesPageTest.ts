@@ -39,4 +39,8 @@ test("User completed badges with metallic, steam badges and default badges.", ()
   badge = badges[71];
   expect(badge.appId).toBe(28);
   expect(badge.level).toBe(0);//Because infinity
+
+
+  expect(page.getLastPage()).toBe(4)
+  expect(page.hasNextPage()).toBe(false)
 });
