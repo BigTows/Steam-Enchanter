@@ -24,6 +24,12 @@ class UserCompletedBadgesPage extends SteamPage {
   private readonly currentPage: number;
   private readonly lastPage: number;
 
+  /**
+   *
+   * @param root
+   * @param steamId TODO REMOVE...
+   * @param currentPage
+   */
   constructor(root: HTMLElement, steamId: string, currentPage: number) {
     super(root, UserCompletedBadgesPage.configuration);
     this.steamId = steamId;
