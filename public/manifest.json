@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Steam Enchanter",
   "description": "Automating some actions for Level up your Steam account.",
-  "version": "1.0",
+  "version": "1.0.1",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyPmdRVJ9XxGnV4qLbRm7pEM8kUzOa6MnJFJ43fstWn6wIktC6lWZ7Qz9oIyvGua9ytYSTaqsavQksPa8eBY8L9V+Hd6xOEap82SfT353N0P9M/ZLQsG1X/KtUijaoMxoPl5VNBz+h0tuVhNHFYjeFqtujTU1JrY+Dv4U0COQv4wiGUUfdh0QVIxLg/ELK/ltmM4xsIz6EehrowY6GGjQiT7PJPda6MwS0WaJeJa6HgvIAILISVDNMFD2CipiuHZjcxC3FQQGMabciNwiv5a3sY7wyum1zWUJb71DAJV3X0eqLuDXuCtoJm+O0HOFnhtVXeR9b4WtqYyOGk92yDuFmwIDAQAB",
   "action": {
     "default_icon": "icon.png"
@@ -48,6 +48,7 @@
   },
   "permissions": [],
   "host_permissions": [
-    "<all_urls>"
+    "https://steamcardexchange.net/api*",
+    "https://www.steamcardexchange.net/api*"
   ]
 }
