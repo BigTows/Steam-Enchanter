@@ -1,7 +1,7 @@
 module.exports = {
     roots: ["src"],
     transform: {
-        "^.+\\.ts$": "ts-jest"
+        "^.+\\.(ts|tsx)$": "ts-jest"
     },
     testEnvironment: 'jsdom',
     collectCoverage: true,
