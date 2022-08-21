@@ -8,6 +8,13 @@ import { CardMarketPosition } from "../steam/pages/component/CardBuyerTable";
 import SteamCardTraderService from "./SteamCardTraderService";
 import { Status } from "./SteamCardTraderProcess";
 import { injector } from "../configuration/Injector";
+import SteamCurrency from "../steam/utils/SteamCurrency";
+
+
+interface BadgeOrder {
+  orderDetails: Array<CardMarketPosition>,
+  currency: SteamCurrency
+}
 
 class LevelUpService {
   private readonly exchangeApi: SteamCardExchangeApi = new SteamCardExchangeApi();
@@ -21,10 +28,50 @@ class LevelUpService {
   constructor(template: LevelUpBlock, steamId: string) {
     this.template = template;
     this.steamId = steamId;
-    this.exchangeApi.getLoad().then(result => {
-      this.steamBadgePrices = result;
+    // this.exchangeApi.getLoad().then(result => {
+    //   this.steamBadgePrices = result;
+    // });
+  }
+
+
+  public async getUncompletedBadges(): Promise<Array<SteamBadgePrice>> {
+    const cheapestBadges = await this.exchangeApi.getLoad();
+    const userBadges = await this.loadAllCompletedBadges();
+
+    return cheapestBadges.filter(steamBadge => {
+      const levelOfUserBadge = userBadges.get(steamBadge.appId);
+      return levelOfUserBadge === undefined || levelOfUserBadge < 5;
     });
   }
+
+  public async calculateOrderForBadge(steamId: string, appId: number, targetLevel: number): Promise<BadgeOrder> {
+    const gameCardPage = await SteamPageLoader.loadGameCard(steamId, appId);
+
+    const details: Array<CardOrderDetail> = gameCardPage.getGameCards().map(gameCard => {
+      return {
+        hashName: gameCard.hashName,
+        quantity: (targetLevel - gameCardPage.getLevelBadge() - gameCard.count)
+      };
+    }).filter(cardOrderDetails => {
+      return cardOrderDetails.quantity > 0;
+    });
+
+    const marketPage = await gameCardPage.getCardMarketPage(details);
+
+    const currency = marketPage.getCurrency();
+
+    currency.setCents(
+      marketPage.getCards().reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.price * currentValue.quantity;
+      }, 0)
+    )
+
+    return {
+      orderDetails: marketPage.getCards(),
+      currency: currency
+    };
+  }
+
 
   public async loadUncompletedBadges() {
 
@@ -52,7 +99,7 @@ class LevelUpService {
               return cardOrderDetails.quantity > 0;
             });
 
-            console.log(details)
+            console.log(details);
 
             actions.showProcess();
 
@@ -63,11 +110,11 @@ class LevelUpService {
                 }, 0) / 100
                 ).format({
                   fromCents: true,
-                  symbol: page.getCurrency().symbol
+                  symbol: ''
                 })
               );
-              console.log(page.getCards())
-              actions.finishCalculation(page.getCards(), page.getCurrency().id);
+              console.log(page.getCards());
+              actions.finishCalculation(page.getCards(), 5);
             }).catch(err => {
               console.log(err);
               actions.error();

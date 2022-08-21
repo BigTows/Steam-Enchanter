@@ -1,4 +1,7 @@
 import { CardMarketPosition } from "../pages/component/CardBuyerTable";
+import Badges from "../../react/component/Badges";
+import React from "react";
+import { createRoot } from "react-dom/client";
 
 interface AppElementAction {
   showProcess: (() => void),
@@ -7,11 +10,6 @@ interface AppElementAction {
   error: (() => void),
   success: (() => void),
   changePrice: ((value: string) => void),
-}
-
-enum CurrentState {
-  placeOrder,
-
 }
 
 class LevelUpBlock {
@@ -27,8 +25,12 @@ class LevelUpBlock {
     this.block.className = "profile_customization";
     this.block.style.display = "none";
     this.block.style.width = "100%";
-    this.block.innerHTML = this.getBaseTemplate();
+    //this.block.innerHTML = this.getBaseTemplate();
     this.gamesContainer = this.block.getElementsByClassName(`${LevelUpBlock.ID_PREFIX}GamesContainer`)[0] as HTMLElement;
+
+
+    const root = createRoot(this.block!);
+    root.render(<Badges steamId={steamId}/>);
   }
 
 

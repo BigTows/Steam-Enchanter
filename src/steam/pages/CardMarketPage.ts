@@ -1,7 +1,7 @@
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
 import CardBuyerTable, { CardMarketPosition } from "./component/CardBuyerTable";
 import ComponentLoader from "./component/ComponentLoader";
-import Currency from "../utils/Currency";
+import SteamCurrency from "../utils/SteamCurrency";
 
 enum Components {
   Table = "Table",
@@ -49,11 +49,8 @@ class CardMarketPage extends SteamPage {
     return this.getComponentElement<CardBuyerTable>(Components.Table).getCards();
   }
 
-  public getCurrency(): { id: number; symbol: string } {
-    return {
-      id: this.currency,
-      symbol: Currency.getCurrencySymbolByWalletCurrencyNumber(this.currency)
-    };
+  public getCurrency(): SteamCurrency {
+    return new SteamCurrency(this.currency);
   }
 
 }
