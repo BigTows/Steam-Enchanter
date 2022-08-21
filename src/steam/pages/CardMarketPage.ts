@@ -1,7 +1,6 @@
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
 import CardBuyerTable, { CardMarketPosition } from "./component/CardBuyerTable";
 import ComponentLoader from "./component/ComponentLoader";
-import Cookies from "js-cookie";
 import Currency from "../utils/Currency";
 
 enum Components {
@@ -9,6 +8,10 @@ enum Components {
   scriptWithWalletData = "script"
 }
 
+/**
+ * Page like
+ * https://steamcommunity.com/market/multibuy?appid=753&items[]=530860-Horizon&qty[]=0&items[]=530860-Melted&qty[]=0&items[]=530860-Cliff&qty[]=0&items[]=530860-Crossroads%20%28Trading%20Card%29&qty[]=0&items[]=530860-Trader%20%28Trading%20Card%29&qty[]=0&items[]=530860-Desert%20%28Trading%20Card%29&qty[]=1
+ */
 class CardMarketPage extends SteamPage {
 
   private static readonly configuration: Array<SteamPageConfiguration> = [
@@ -32,7 +35,7 @@ class CardMarketPage extends SteamPage {
 
 
   private findCurrencyWallet(scriptElement: HTMLElement): number {
-    const result = scriptElement.innerHTML.match(/wallet_currency\":(\d*),/);
+    const result = scriptElement.innerHTML.match(/wallet_currency":(\d*),/);
 
     if (result === null || result.length !== 2) {
       throw new Error("Can't find currency");
@@ -51,14 +54,6 @@ class CardMarketPage extends SteamPage {
       id: this.currency,
       symbol: Currency.getCurrencySymbolByWalletCurrencyNumber(this.currency)
     };
-  }
-
-  /**
-   * TODO remove from where
-   * @deprecated
-   */
-  public getSessionId(): string | undefined {
-    return Cookies.get("sessionid");
   }
 
 }

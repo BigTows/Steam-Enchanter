@@ -32,7 +32,9 @@ class GameCardExplore implements SteamElement {
 
 
   private getOwnedCardData(footerCard: HTMLElement): GameCard {
-    const data = footerCard.innerText.trim().split("\n");
+    const text = footerCard.innerText ?? footerCard.textContent
+
+    const data = text.trim().split("\n");
     if (data.length !== 2) {
       throw new Error("Can't find meta data.");
     }
@@ -44,8 +46,9 @@ class GameCardExplore implements SteamElement {
   }
 
   private getUnownedCardData(footerCard: HTMLElement): GameCard{
+    const text = footerCard.innerText ?? footerCard.textContent
     return {
-      name: footerCard.innerText.trim(),
+      name: text.trim(),
       count: 0
     };
   }

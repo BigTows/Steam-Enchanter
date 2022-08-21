@@ -33,7 +33,9 @@
         "https://steamcommunity.com/id/*/videos*",
         "https://steamcommunity.com/profiles/*/videos*",
         "https://steamcommunity.com/id/*/myworkshopfiles*",
-        "https://steamcommunity.com/profiles/*/myworkshopfiles*"
+        "https://steamcommunity.com/profiles/*/myworkshopfiles*",
+        "https://steamcommunity.com/id/*/gamecards*",
+        "https://steamcommunity.com/profiles/*/gamecards*"
       ],
       "js": [
         "js/vendor.js",
