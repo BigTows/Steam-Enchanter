@@ -3,6 +3,7 @@ import LevelUpService from "../../../service/LevelUpService";
 import { SteamBadgePrice } from "../../../steam/api/SteamCardExchangeApi";
 import Badge from "./Badge";
 import Loading from "./ui/Loading";
+import Pagination from "./ui/Pagination";
 
 interface BadgesProperties {
   steamId: string;
@@ -19,25 +20,35 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
 
   constructor(props: BadgesProperties) {
     super(props);
-    this.state = { currentPage: 0 };
+    this.state = { currentPage: 1 };
     this.levelUpService = new LevelUpService();
+    this.onPageChanged = this.onPageChanged.bind(this);
   }
 
   componentDidMount() {
     this.levelUpService.getUncompletedBadges(this.props.steamId).then(result => {
-      console.log("Finished!");
+      console.log("Finished!", result);
       this.setState({ badges: result });
     });
   }
 
+  onPageChanged(newPage: number) {
+    this.setState({ currentPage: newPage });
+  }
+
   render() {
+    const pagination = this.state.badges !== undefined ?
+      <Pagination items={this.state.badges.length} itemsPerPage={Badges.ITEMS_PER_PAGE}
+                  currentPage={this.state.currentPage} callback={this.onPageChanged} /> : <></>;
+
     return (
       <div>
         <div className={"profile_customization_header ellipsis"}>Level up (beta#mvp)</div>
         <div className={"profile_customization_block"}>
           <div className="customtext_showcase">
+            {pagination}
             <div className="showcase_content_bg showcase_notes">
-              <div id="BG_bottom" className="market_multibuy">
+              <div className="market_multibuy">
                 <table style={{ width: "100%" }}>
                   <colgroup>
                     <col style={{ width: "60%" }} />
@@ -66,9 +77,11 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
     const { badges, currentPage } = this.state;
     if (badges === undefined) {
       return (
-        <tr><td colSpan={4}>
-          <Loading/>
-        </td></tr>
+        <tr>
+          <td colSpan={4}>
+            <Loading />
+          </td>
+        </tr>
       );
     } else {
       return this.getBadges([...badges], currentPage);
@@ -78,7 +91,7 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
   private getBadges(badges: Array<SteamBadgePrice>, page: number) {
 
     return badges
-      .splice(page * Badges.ITEMS_PER_PAGE, Badges.ITEMS_PER_PAGE)
+      .splice((page - 1) * Badges.ITEMS_PER_PAGE, Badges.ITEMS_PER_PAGE)
       .map(steamBadgePrice => {
         return (
           <Badge steamId={this.props.steamId} appId={steamBadgePrice.appId} appName={steamBadgePrice.appName}

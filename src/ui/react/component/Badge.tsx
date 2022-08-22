@@ -55,7 +55,7 @@ export default class Badge extends React.Component<BadgeProperties, BadgeState> 
             <a className={"market_listing_item_name_link"} target="_blank"
                href={`https://steamcommunity.com/profiles/${this.props.steamId}/gamecards/${this.props.appId}`}>
               <p style={{
-                maxWidth: "25ch",
+                maxWidth: "24ch",
                 textOverflow: "ellipsis",
                 overflow: "hidden",
                 whiteSpace: "nowrap"
