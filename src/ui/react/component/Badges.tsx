@@ -4,6 +4,7 @@ import { SteamBadgePrice } from "../../../steam/api/SteamCardExchangeApi";
 import Badge from "./Badge";
 import Loading from "./ui/Loading";
 import Pagination from "./ui/Pagination";
+import { injector } from "../../../configuration/Injector";
 
 interface BadgesProperties {
   steamId: string;
@@ -21,7 +22,7 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
   constructor(props: BadgesProperties) {
     super(props);
     this.state = { currentPage: 1 };
-    this.levelUpService = new LevelUpService();
+    this.levelUpService = injector.resolve(LevelUpService);
     this.onPageChanged = this.onPageChanged.bind(this);
   }
 
@@ -43,7 +44,9 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
 
     return (
       <div>
-        <div className={"profile_customization_header ellipsis"}>Uncompleted badges <span className={`profile_paging`} style={{background: "none"}}>(Price stats provided by <a href="https://www.steamcardexchange.net/" target="_blank">SteamCardExchange</a>)</span></div>
+        <div className={"profile_customization_header ellipsis"}>Uncompleted badges <span className={`profile_paging`}
+                                                                                          style={{ background: "none" }}>(Price stats provided by <a
+          href="https://www.steamcardexchange.net/" target="_blank">SteamCardExchange</a>)</span></div>
         <div className={"profile_customization_block"}>
           <div className="customtext_showcase">
             {pagination}

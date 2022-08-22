@@ -31,16 +31,15 @@ export default class Badge extends React.Component<BadgeProperties, BadgeState> 
   private readonly levelUpService: LevelUpService;
 
 
-  constructor(props: BadgeProperties, context: any) {
-    super(props, context);
+  constructor(props: BadgeProperties) {
+    super(props);
     this.state = { status: BadgeStatus.Waiting };
-
 
     this.calculateApp = this.calculateApp.bind(this);
     this.order = this.order.bind(this);
 
     // @ts-ignore
-    this.levelUpService = new LevelUpService(null, this.props.steamId);
+    this.levelUpService = injector.resolve(LevelUpService);
   }
 
   render() {

@@ -21,5 +21,4 @@ container.register<SteamMarketApi>(Tokens.STEAM_MARKET_API, {
   useClass: SteamMarketApiImpl
 });
 
-
 export const injector = container;

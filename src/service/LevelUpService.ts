@@ -4,6 +4,7 @@ import { BadgeData } from "../steam/pages/component/Badges";
 import { CardOrderDetail } from "../steam/pages/GameCardsPage";
 import { CardMarketPosition } from "../steam/pages/component/CardBuyerTable";
 import SteamCurrency from "../steam/utils/SteamCurrency";
+import { injectable } from "tsyringe";
 
 
 interface BadgeOrder {
@@ -11,8 +12,13 @@ interface BadgeOrder {
   currency: SteamCurrency
 }
 
+@injectable()
 class LevelUpService {
-  private readonly exchangeApi: SteamCardExchangeApi = new SteamCardExchangeApi();
+  private readonly exchangeApi: SteamCardExchangeApi;
+
+  constructor(steamCardExchangeApi: SteamCardExchangeApi) {
+    this.exchangeApi = steamCardExchangeApi;
+  }
 
   public async getUncompletedBadges(steamId: string): Promise<Array<SteamBadgePrice>> {
     const cheapestBadges = await this.exchangeApi.getLoad();
@@ -44,7 +50,7 @@ class LevelUpService {
       marketPage.getCards().reduce((accumulator, currentValue) => {
         return accumulator + currentValue.price * currentValue.quantity;
       }, 0)
-    )
+    );
 
     return {
       orderDetails: marketPage.getCards(),

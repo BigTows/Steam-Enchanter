@@ -11,11 +11,6 @@ export interface SteamBadgePrice {
 
 class SteamCardExchangeApi {
 
-
-  constructor() {
-  }
-
-
   async getLoad(): Promise<Array<SteamBadgePrice>> {
     return new Promise<Array<SteamBadgePrice>>((resolve) => {
       chrome.runtime.sendMessage({}, (response: any) => {
