@@ -1,6 +1,8 @@
 # Steam Enchanter
 This is extension of Google Chrome browsers for [Steam](https://store.steampowered.com) users. Automate processes for getting badges.
 
+---
+[![codecov](https://codecov.io/gh/BigTows/Steam-Enchanter/branch/main/graph/badge.svg?token=S3ZP1I7M06)](https://codecov.io/gh/BigTows/Steam-Enchanter)
 ## Features
  
  ### Automated purchase of cards for not unlocked Badges.
