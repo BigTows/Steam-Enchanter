@@ -1,6 +1,6 @@
 import React from "react";
-import LevelUpService from "../../service/LevelUpService";
-import { SteamBadgePrice } from "../../steam/api/SteamCardExchangeApi";
+import LevelUpService from "../../../service/LevelUpService";
+import { SteamBadgePrice } from "../../../steam/api/SteamCardExchangeApi";
 import Badge from "./Badge";
 import Loading from "./ui/Loading";
 
@@ -19,15 +19,12 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
 
   constructor(props: BadgesProperties) {
     super(props);
-    console.log(props);
     this.state = { currentPage: 0 };
-
-    // @ts-ignore
-    this.levelUpService = new LevelUpService(null, this.props.steamId);
+    this.levelUpService = new LevelUpService();
   }
 
   componentDidMount() {
-    this.levelUpService.getUncompletedBadges().then(result => {
+    this.levelUpService.getUncompletedBadges(this.props.steamId).then(result => {
       console.log("Finished!");
       this.setState({ badges: result });
     });

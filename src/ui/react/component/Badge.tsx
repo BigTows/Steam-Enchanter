@@ -1,11 +1,11 @@
 import React from "react";
 import Loading from "./ui/Loading";
-import LevelUpService from "../../service/LevelUpService";
-import SteamCurrency from "../../steam/utils/SteamCurrency";
-import { injector } from "../../configuration/Injector";
-import SteamCardTraderService from "../../service/SteamCardTraderService";
-import { CardMarketPosition } from "../../steam/pages/component/CardBuyerTable";
-import { Status } from "../../service/SteamCardTraderProcess";
+import LevelUpService from "../../../service/LevelUpService";
+import SteamCurrency from "../../../steam/utils/SteamCurrency";
+import { injector } from "../../../configuration/Injector";
+import SteamCardTraderService from "../../../service/SteamCardTraderService";
+import { CardMarketPosition } from "../../../steam/pages/component/CardBuyerTable";
+import { Status } from "../../../service/SteamCardTraderProcess";
 
 interface BadgeProperties {
   steamId: string,
@@ -126,16 +126,15 @@ Items will be purchased at the cheapest price available, so the order may end up
   private calculateApp() {
     this.setState({ status: BadgeStatus.Processing });
 
-    const self = this;
     this.levelUpService.calculateOrderForBadge(
       this.props.steamId,
       this.props.appId,
       5
     ).then(order => {
-      self.setState({ price: order.currency, status: BadgeStatus.PriceLoaded, orderDetails: order.orderDetails });
+      this.setState({ price: order.currency, status: BadgeStatus.PriceLoaded, orderDetails: order.orderDetails });
     }).catch(err => {
       console.error(err);
-      self.setState({ status: BadgeStatus.Error });
+      this.setState({ status: BadgeStatus.Error });
     });
   }
 
