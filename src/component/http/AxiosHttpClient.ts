@@ -1,4 +1,4 @@
-import HttpClient, { HttpClientOptions, Retries } from "./HttpClient";
+import HttpClient, { HttpClientOptions } from "./HttpClient";
 import { Axios, AxiosRequestConfig } from "axios";
 
 class AxiosHttpClient implements HttpClient {
@@ -9,8 +9,13 @@ class AxiosHttpClient implements HttpClient {
     this.axiosInstance = new Axios({
       withCredentials: true,
       transformResponse: [function transformResponse(data, headers) {
-        // Optionally you can check the response headers['content-type'] for application/json or text/json
-        return JSON.parse(data);
+        if (headers?.["content-type"].includes("text/html")) {
+          const root = document.createElement("html");
+          root.innerHTML = data;
+          return root;
+        } else {
+          return JSON.parse(data);
+        }
       }]
     });
   }
@@ -20,7 +25,7 @@ class AxiosHttpClient implements HttpClient {
     return this.executeRequest({
       url: url,
       method: "GET"
-    }, options?.retries);
+    }, options);
   }
 
   post<R = any, D = any>(url: string, data?: D, options?: HttpClientOptions<R>): Promise<R> {
@@ -28,19 +33,25 @@ class AxiosHttpClient implements HttpClient {
       url: url,
       method: "POST",
       data: data
-    }, options?.retries);
+    }, options);
   }
 
 
-  private async executeRequest<R>(configuration: AxiosRequestConfig, retries?: Retries<any>): Promise<R> {
+  private async executeRequest<R>(configuration: AxiosRequestConfig, options?: HttpClientOptions<R>): Promise<R> {
     const result = await this.axiosInstance.request<R>(configuration);
-    const resultData = result.data;
+    let resultData = result.data;
 
-    if (retries !== undefined && retries.count > 0 && retries.needRetry(resultData)) {
-      retries.count -= 1;
-      console.log(`Request ${configuration.url}, was not successfully, retry ${retries.count}`)
-      await new Promise(s => setTimeout(s, 1500));
-      return await this.executeRequest(configuration, retries);
+
+    try {
+      if (options?.transformer) {
+        resultData = options.transformer(resultData);
+      }
+    } catch (err) {
+      return this.processRetries<R>(configuration, options);
+    }
+
+    if (options?.retries !== undefined && options.retries.needRetry(resultData)) {
+      return this.processRetries<R>(configuration, options);
     }
 
     return await new Promise<R>((resolve) => {
@@ -48,6 +59,20 @@ class AxiosHttpClient implements HttpClient {
     });
   }
 
+  private async processRetries<R>(configuration: AxiosRequestConfig, options?: HttpClientOptions<R>): Promise<R> {
+    if (options?.retries === undefined) {
+      throw new Error("Can't process request");
+    }
+
+    if (options.retries.count > 0) {
+      options.retries.count -= 1;
+      console.log(`Request ${configuration.url}, was not successfully, retry ${options.retries.count}`);
+      await new Promise(s => setTimeout(s, 1500));
+      return await this.executeRequest(configuration, options);
+    }
+    throw new Error("Retries was end.");
+  }
+
 }
 
-export default AxiosHttpClient
+export default AxiosHttpClient;

@@ -4,8 +4,6 @@
  */
 
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
-import SteamPageLoader from "./SteamPageLoader";
-import CardMarketPage from "./CardMarketPage";
 import ComponentLoader from "./component/ComponentLoader";
 import GameCardExplore, { GameCard } from "./component/GameCardExplore";
 import CardBadge from "./component/CardBadge";
@@ -63,10 +61,10 @@ class GameCardsPage extends SteamPage {
   private loadGameCardMeta(dom: HTMLElement): Array<GameCardMeta> {
     const badgeCardStatus = this.getComponentElement<GameCardExplore>(Elements.cards).getGameCards();
 
-    const hashes = this.findHashesFromLink(dom.querySelector("div.badge_cards_to_collect > div.gamecards_inventorylink > a") as HTMLLinkElement);
+    const hashes = GameCardsPage.findHashesFromLink(dom.querySelector("div.badge_cards_to_collect > div.gamecards_inventorylink > a") as HTMLLinkElement);
 
 
-    const countEquals = this.userHashSameCountOfCards(badgeCardStatus);
+    const countEquals = GameCardsPage.userHashSameCountOfCards(badgeCardStatus);
 
     return badgeCardStatus.map((ownedCard, index) => {
       const approximateHash = `${this.gameAppId}-${ownedCard.name}`;
@@ -86,7 +84,7 @@ class GameCardsPage extends SteamPage {
     });
   }
 
-  private userHashSameCountOfCards(badgeCardStatus: Array<GameCard>): boolean {
+  private static userHashSameCountOfCards(badgeCardStatus: Array<GameCard>): boolean {
     const sorted = badgeCardStatus.sort((left: GameCard, right: GameCard) => {
       return left.count - right.count;
     });
@@ -98,7 +96,7 @@ class GameCardsPage extends SteamPage {
    * This need because sometimes `Steam` use postfix `(Trading Card)` for some cards. (I don't understand that thing ;/)
    * @private
    */
-  private findHashesFromLink(linkElement: HTMLLinkElement | null): Array<string> {
+  private static findHashesFromLink(linkElement: HTMLLinkElement | null): Array<string> {
     if (linkElement === null) {
       return [];
     }
@@ -106,7 +104,7 @@ class GameCardsPage extends SteamPage {
     return link.searchParams.getAll("items[]");
   }
 
-  public async getCardMarketPage(details: Array<CardOrderDetail>): Promise<CardMarketPage> {
+  public getCardMarketPageLink(details: Array<CardOrderDetail>): string {
 
     const params = new URLSearchParams();
 
@@ -117,9 +115,8 @@ class GameCardsPage extends SteamPage {
       params.append("qty[]", `${detail.quantity}`);
     });
 
-    return await SteamPageLoader.loadCardMarketPage(
-      `https://steamcommunity.com/market/multibuy?${params.toString()}`
-    );
+    //TODO HOST
+    return `https://steamcommunity.com/market/multibuy?${params.toString()}`
   }
 
 

@@ -14,9 +14,11 @@ interface BadgeOrder {
 
 @injectable()
 class LevelUpService {
+  private readonly steamPageLoader: SteamPageLoader;
   private readonly exchangeApi: SteamCardExchangeApi;
 
-  constructor(steamCardExchangeApi: SteamCardExchangeApi) {
+  constructor(steamPageLoader: SteamPageLoader, steamCardExchangeApi: SteamCardExchangeApi) {
+    this.steamPageLoader = steamPageLoader;
     this.exchangeApi = steamCardExchangeApi;
   }
 
@@ -31,7 +33,7 @@ class LevelUpService {
   }
 
   public async calculateOrderForBadge(steamId: string, appId: number, targetLevel: number): Promise<BadgeOrder> {
-    const gameCardPage = await SteamPageLoader.loadGameCard(steamId, appId);
+    const gameCardPage = await this.steamPageLoader.loadGameCard(steamId, appId);
 
     const details: Array<CardOrderDetail> = gameCardPage.getGameCards().map(gameCard => {
       return {
@@ -42,7 +44,9 @@ class LevelUpService {
       return cardOrderDetails.quantity > 0;
     });
 
-    const marketPage = await gameCardPage.getCardMarketPage(details);
+    const marketPage = await this.steamPageLoader.loadCardMarketPage(
+      gameCardPage.getCardMarketPageLink(details)
+    );
 
     const currency = marketPage.getCurrency();
 
@@ -61,10 +65,10 @@ class LevelUpService {
 
   private async loadAllCompletedBadges(steamId: string): Promise<Map<number, number>> {
     const map = new Map<number, number>;
-    let page = await SteamPageLoader.loadUserCompletedBadges(steamId, 1);
+    let page = await this.steamPageLoader.loadUserCompletedBadges(steamId, 1);
     this.badgesToMap(map, page.getBadges());
     while (page.hasNextPage()) {
-      page = await page.nextPage();
+      page = await this.steamPageLoader.loadUserCompletedBadges(steamId, page.getCurrentPage() + 1);
       this.badgesToMap(map, page.getBadges());
     }
     return map;
