@@ -1,0 +1,527 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pagination with difference setup 1`] = `
+<div
+  className="profile_paging"
+>
+  <div
+    className="pageLinks"
+  >
+    <a
+      className="pagebtn disabled"
+      onClick={[Function]}
+    >
+      &lt;
+    </a>
+     
+    <span>
+      1
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        2
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        3
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        4
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        5
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        6
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &gt;
+    </a>
+  </div>
+  Showing 
+  1
+  -
+  10
+   of 
+  55
+   uncompleted badges
+</div>
+`;
+
+exports[`pagination with difference setup 2`] = `
+<div
+  className="profile_paging"
+>
+  <div
+    className="pageLinks"
+  >
+    <a
+      className="pagebtn disabled"
+      onClick={[Function]}
+    >
+      &lt;
+    </a>
+     
+    <span>
+      1
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <a
+      className="pagebtn disabled"
+      onClick={[Function]}
+    >
+      &gt;
+    </a>
+  </div>
+  Showing 
+  1
+  -
+  10
+   of 
+  10
+   uncompleted badges
+</div>
+`;
+
+exports[`pagination with difference setup 3`] = `
+<div
+  className="profile_paging"
+>
+  <div
+    className="pageLinks"
+  >
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &lt;
+    </a>
+     
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        1
+      </a>
+       ... 
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        13
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        14
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      15
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        16
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        17
+      </a>
+       ... 
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        205
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &gt;
+    </a>
+  </div>
+  Showing 
+  617
+  -
+  660
+   of 
+  9,000
+   uncompleted badges
+</div>
+`;
+
+exports[`pagination with difference setup 4`] = `
+<div
+  className="profile_paging"
+>
+  <div
+    className="pageLinks"
+  >
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &lt;
+    </a>
+     
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        1
+      </a>
+       ... 
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        8
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        9
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      10
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <a
+      className="pagebtn disabled"
+      onClick={[Function]}
+    >
+      &gt;
+    </a>
+  </div>
+  Showing 
+  91
+  -
+  100
+   of 
+  100
+   uncompleted badges
+</div>
+`;
+
+exports[`pagination with difference setup 5`] = `
+<div
+  className="profile_paging"
+>
+  <div
+    className="pageLinks"
+  >
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &lt;
+    </a>
+     
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        1
+      </a>
+       ... 
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        7
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        8
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      9
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        10
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &gt;
+    </a>
+  </div>
+  Showing 
+  81
+  -
+  90
+   of 
+  100
+   uncompleted badges
+</div>
+`;
+
+exports[`pagination with difference setup 6`] = `
+<div
+  className="profile_paging"
+>
+  <div
+    className="pageLinks"
+  >
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &lt;
+    </a>
+     
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        1
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        2
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        3
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      4
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        5
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        6
+      </a>
+       ... 
+    </span>
+    <span>
+      <a
+        className="pagelink"
+        onClick={[Function]}
+      >
+        90091
+      </a>
+      <span
+        className="pagination_space"
+      >
+          
+      </span>
+    </span>
+    <a
+      className="pagebtn "
+      onClick={[Function]}
+    >
+      &gt;
+    </a>
+  </div>
+  Showing 
+  31
+  -
+  40
+   of 
+  900,909
+   uncompleted badges
+</div>
+`;
