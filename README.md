@@ -1,4 +1,8 @@
-# Steam Enchanter
+<div align="center">
+ <h1>Steam Enchanter</h1>
+ <img src="public/icon.png" alt="logo">
+</div>
+
 This is extension of Google Chrome browsers for [Steam](https://store.steampowered.com) users. Automate processes for getting badges.
 
 ---
