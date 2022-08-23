@@ -15,4 +15,4 @@ This is extension of Google Chrome browsers for [Steam](https://store.steampower
 
 
 ## Special thanks to
-[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)>
+[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)
