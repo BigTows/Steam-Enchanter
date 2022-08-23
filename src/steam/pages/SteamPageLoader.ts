@@ -7,15 +7,18 @@ import { Tokens } from "../../configuration/Injector";
 
 @injectable()
 class SteamPageLoader {
+  private readonly host: string;
   private readonly httpClient: HttpClient;
 
 
-  constructor(@inject(Tokens.HTTP_CLIENT) httpClient: HttpClient) {
+  constructor(@inject(Tokens.STEAM_API) host: string, @inject(Tokens.HTTP_CLIENT) httpClient: HttpClient) {
+    this.host = host;
     this.httpClient = httpClient;
   }
 
   public async loadGameCard(steamId: string, appId: number): Promise<GameCardsPage> {
-    return await this.httpClient.get<GameCardsPage>(`https://steamcommunity.com/profiles/${steamId}/gamecards/${appId}`, {
+    console.log(`${this.host}/profiles/${steamId}/gamecards/${appId}`)
+    return await this.httpClient.get<GameCardsPage>(`${this.host}/profiles/${steamId}/gamecards/${appId}`, {
       retries: {
         count: 4,
         needRetry: () => {
@@ -47,7 +50,7 @@ class SteamPageLoader {
   public async loadUserCompletedBadges(steamId: string, page: number): Promise<UserCompletedBadgesPage> {
 
     return await this.httpClient.get<UserCompletedBadgesPage>(
-      `https://steamcommunity.com/profiles/${steamId}/badges/?sort=c&p=${page}`, {
+      `${this.host}/profiles/${steamId}/badges/?sort=c&p=${page}`, {
         retries: {
           count: 4,
           needRetry: () => {

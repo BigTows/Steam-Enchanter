@@ -87,3 +87,7 @@ test("Try get uncompleted Badges", async () => {
   expect(badge.appName).toBe("UncompletedBadges#2")
   expect(badge.price).toBe(144)
 });
+
+test('Calculate order for Badge',()=>{
+
+})
