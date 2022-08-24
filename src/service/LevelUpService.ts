@@ -1,111 +1,74 @@
-import LevelUpBlock from "../steam/teamplates/LevelUpBlock";
 import SteamCardExchangeApi, { SteamBadgePrice } from "../steam/api/SteamCardExchangeApi";
 import SteamPageLoader from "../steam/pages/SteamPageLoader";
 import { BadgeData } from "../steam/pages/component/Badges";
 import { CardOrderDetail } from "../steam/pages/GameCardsPage";
-import currency from "currency.js";
 import { CardMarketPosition } from "../steam/pages/component/CardBuyerTable";
-import SteamCardTraderService from "./SteamCardTraderService";
-import { Status } from "./SteamCardTraderProcess";
+import SteamCurrency from "../steam/utils/SteamCurrency";
+import { injectable } from "tsyringe";
 
+
+interface BadgeOrder {
+  orderDetails: Array<CardMarketPosition>,
+  currency: SteamCurrency
+}
+
+@injectable()
 class LevelUpService {
-  private readonly exchangeApi: SteamCardExchangeApi = new SteamCardExchangeApi();
+  private readonly steamPageLoader: SteamPageLoader;
+  private readonly exchangeApi: SteamCardExchangeApi;
 
-  private template: LevelUpBlock;
+  constructor(steamPageLoader: SteamPageLoader, steamCardExchangeApi: SteamCardExchangeApi) {
+    this.steamPageLoader = steamPageLoader;
+    this.exchangeApi = steamCardExchangeApi;
+  }
 
-  private steamBadgePrices: Array<SteamBadgePrice> | undefined;
+  public async getUncompletedBadges(steamId: string): Promise<Array<SteamBadgePrice>> {
+    const cheapestBadges = await this.exchangeApi.getLoad();
+    const userBadges = await this.loadAllCompletedBadges(steamId);
 
-  private readonly steamId: string;
-
-  constructor(template: LevelUpBlock, steamId: string) {
-    this.template = template;
-    this.steamId = steamId;
-    this.exchangeApi.getLoad().then(result => {
-      this.steamBadgePrices = result;
+    return cheapestBadges.filter(steamBadge => {
+      const levelOfUserBadge = userBadges.get(steamBadge.appId);
+      return levelOfUserBadge === undefined || levelOfUserBadge < 5;
     });
   }
 
-  public async loadUncompletedBadges() {
+  public async calculateOrderForBadge(steamId: string, appId: number, targetLevel: number): Promise<BadgeOrder> {
+    const gameCardPage = await this.steamPageLoader.loadGameCard(steamId, appId);
 
-    if (this.steamBadgePrices === undefined) {
-      throw new Error("Can't load steam exchange API");
-    }
-    const userBadges = await this.loadAllCompletedBadges();
+    const details: Array<CardOrderDetail> = gameCardPage.getGameCards().map(gameCard => {
+      return {
+        hashName: gameCard.hashName,
+        quantity: (targetLevel - gameCardPage.getLevelBadge() - gameCard.count)
+      };
+    }).filter(cardOrderDetails => {
+      return cardOrderDetails.quantity > 0;
+    });
 
+    const marketPage = await this.steamPageLoader.loadCardMarketPage(
+      gameCardPage.getCardMarketPageLink(details)
+    );
 
-    this.steamBadgePrices.filter(steamBadge => {
-      const levelOfUserBadge = userBadges.get(steamBadge.appId);
-      return levelOfUserBadge === undefined || levelOfUserBadge < 5;
-    }).splice(0, 40)//TODO pagination
-      .forEach(steamBadge => {
-        this.template.addApp(steamBadge.appId, steamBadge.appName, (actions) => {
-          actions.showProcess();
-          SteamPageLoader.loadGameCard(this.steamId, steamBadge.appId).then((page) => {
+    const currency = marketPage.getCurrency();
 
-            const details: Array<CardOrderDetail> = page.getGameCards().map(gameCard => {
-              return {
-                hashName: gameCard.hashName,
-                quantity: (5 - page.getLevelBadge() - gameCard.count)
-              };
-            }).filter(cardOrderDetails => {
-              return cardOrderDetails.quantity > 0;
-            });
+    currency.setCents(
+      marketPage.getCards().reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.price * currentValue.quantity;
+      }, 0)
+    );
 
-            console.log(details)
-
-            actions.showProcess();
-
-            page.getCardMarketPage(details).then(page => {
-              actions.changePrice(
-                currency(page.getCards().reduce((accumulator, currentValue) => {
-                  return accumulator + currentValue.price * currentValue.quantity;
-                }, 0) / 100
-                ).format({
-                  fromCents: true,
-                  symbol: page.getCurrency().symbol
-                })
-              );
-              console.log(page.getCards())
-              actions.finishCalculation(page.getCards(), page.getCurrency().id);
-            }).catch(err => {
-              console.log(err);
-              actions.error();
-            });
-          }).catch(err => {
-            actions.error();
-            console.log(err);
-          });
-
-        }, (order: Array<CardMarketPosition>, currencyId: number, actions) => {
-          actions.showProcess();
-          new SteamCardTraderService().createTrader(
-            order,
-            currencyId
-          ).then(a => {
-            const interval = setInterval(() => {
-              if (a.getCurrentStatus() === Status.finished) {
-                clearInterval(interval);
-                actions.success();
-              } else if (a.getCurrentStatus() === Status.error) {
-                clearInterval(interval);
-                actions.error();
-              }
-            }, 1000);
-          }).catch(err => {
-            console.log(err);
-            actions.error();
-          });
-        });
-      });
+    return {
+      orderDetails: marketPage.getCards(),
+      currency: currency
+    };
   }
 
 
-  private async loadAllCompletedBadges(): Promise<Map<number, number>> {
+  private async loadAllCompletedBadges(steamId: string): Promise<Map<number, number>> {
     const map = new Map<number, number>;
-    let page = await SteamPageLoader.loadUserCompletedBadges(this.steamId, 1);
+    let page = await this.steamPageLoader.loadUserCompletedBadges(steamId, 1);
     this.badgesToMap(map, page.getBadges());
     while (page.hasNextPage()) {
-      page = await page.nextPage();
+      page = await this.steamPageLoader.loadUserCompletedBadges(steamId, page.getCurrentPage() + 1);
       this.badgesToMap(map, page.getBadges());
     }
     return map;

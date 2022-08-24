@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading component test 1`] = `
+<div
+  className="market_multi_throbber"
+>
+  <div
+    className="LoadingWrapper"
+  >
+    <div
+      className="LoadingThrobber"
+    >
+      <div
+        className="Bar Bar1"
+      />
+      <div
+        className="Bar Bar2"
+      />
+      <div
+        className="Bar Bar3"
+      />
+    </div>
+  </div>
+</div>
+`;
