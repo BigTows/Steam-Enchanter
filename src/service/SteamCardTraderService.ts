@@ -32,7 +32,6 @@ class SteamCardTraderService {
           quantity: position.quantity
         }
       );
-
     }
     return new SteamCardTraderProcess(this.steamMarketApi, sessionId, cardOrderOperationContexts);
   }

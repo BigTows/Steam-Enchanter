@@ -82,4 +82,14 @@ test("Get game cards, when badge is ready to crafting.", () => {
 
 
   expect(gameCardsPage.getLevelBadge()).toBe(2);
+  expect(gameCardsPage.getCardMarketPageLink([
+    {
+      hashName: '18941-!9114h9u1%1951hn 215512njk2 13 (Trading Card)',
+      quantity: 1
+    },
+    {
+      hashName: '2414-!9114h9u1%1%%^#$%^&*(@)!(*&^%$ 215512njk2 13 (Trading Card)',
+      quantity: 2
+    }
+  ])).toBe('https://steamcommunity.com/market/multibuy?appid=753&items%5B%5D=18941-%219114h9u1%251951hn+215512njk2+13+%28Trading+Card%29&qty%5B%5D=1&items%5B%5D=2414-%219114h9u1%251%25%25%5E%23%24%25%5E%26*%28%40%29%21%28*%26%5E%25%24+215512njk2+13+%28Trading+Card%29&qty%5B%5D=2')
 });

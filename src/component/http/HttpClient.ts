@@ -4,7 +4,8 @@ export interface Retries<R> {
 }
 
 export interface HttpClientOptions<R> {
-  retries?: Retries<R>;
+  retries?: Retries<R>
+  transformer?: (rawResult: any) => R
 }
 
 interface HttpClient {
@@ -14,9 +15,9 @@ interface HttpClient {
    * @param url
    * @param options
    */
-  get<R = any>(url: string, options?:HttpClientOptions<R>): Promise<R>;
+  get<R = any>(url: string, options?: HttpClientOptions<R>): Promise<R>;
 
-  post<R = any, D = any>(url: string, data?: D, options?:HttpClientOptions<R>): Promise<R>;
+  post<R = any, D = any>(url: string, data?: D, options?: HttpClientOptions<R>): Promise<R>;
 }
 
 

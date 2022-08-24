@@ -1,6 +1,6 @@
 {
   "name": "steam-enchanter",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Google Chrome extension for Steam. Automating some actions for Level up your account.",
   "main": "index.js",
   "scripts": {
@@ -20,18 +20,24 @@
     "currency.js": "^2.0.4",
     "js-cookie": "^3.0.1",
     "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.158",
     "@types/jest": "^27.5.2",
     "@types/js-cookie": "^3.0.2",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-test-renderer": "^18.0.0",
     "copy-webpack-plugin": "^9.1.0",
     "filemanager-webpack-plugin": "^7.0.0",
     "glob": "^7.2.3",
     "jest": "^27.5.1",
     "jest-mock-extended": "^2.0.7",
     "prettier": "^2.7.1",
+    "react-test-renderer": "^18.2.0",
     "rimraf": "^3.0.2 ",
     "ts-jest": "^27.1.5",
     "ts-loader": "^8.4.0",

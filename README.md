@@ -1,6 +1,9 @@
-# Steam Enchanter
+<h1 align="center"><img align="center" height="128" src="public/logo.png" alt="logo"> Steam Enchanter</h1>
+
 This is extension of Google Chrome browsers for [Steam](https://store.steampowered.com) users. Automate processes for getting badges.
 
+---
+[![codecov](https://codecov.io/gh/BigTows/Steam-Enchanter/branch/main/graph/badge.svg?token=S3ZP1I7M06)](https://codecov.io/gh/BigTows/Steam-Enchanter)
 ## Features
  
  ### Automated purchase of cards for not unlocked Badges.
@@ -12,4 +15,4 @@ This is extension of Google Chrome browsers for [Steam](https://store.steampower
 
 
 ## Special thanks to
-[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)>
+[API for getting the cheapest cards provided by Steamcardexchange.net](https://www.steamcardexchange.net)

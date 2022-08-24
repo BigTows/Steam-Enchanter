@@ -7,8 +7,7 @@ test("CardMarketPage", () => {
 
   const page = new CardMarketPage(body);
 
-  expect(page.getCurrency().id).toBe(5);
-  expect(page.getCurrency().symbol).toBe("₽");
+  expect(page.getCurrency().toFormat()).toBe("₽0.00");
 
   expect(page.getCards()).toHaveLength(5);
 

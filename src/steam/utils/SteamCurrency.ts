@@ -1,4 +1,6 @@
-class Currency {
+import currency from "currency.js";
+
+class SteamCurrency {
   private static readonly currencyMapping = {
     0: "$",
     1: "$",
@@ -50,12 +52,34 @@ class Currency {
     47: "$"
   };
 
+  private readonly id: number;
+  private cents: number = 0;
+
+  constructor(id: number) {
+    this.id = id;
+  }
+
+//TODO remove state, i guess
+  public setCents(cents: number) {
+    this.cents = cents;
+  }
+
 
   public static getCurrencySymbolByWalletCurrencyNumber(walletCurrency: number): string {
     // @ts-ignore
-    return Currency.currencyMapping[walletCurrency] as string;
+    return SteamCurrency.currencyMapping[walletCurrency] as string;
   }
 
+  public toFormat(): string {
+    return currency(this.cents / 100).format({
+      fromCents: true,
+      symbol: SteamCurrency.getCurrencySymbolByWalletCurrencyNumber(this.id)
+    });
+  }
+
+  public getId(){
+    return this.id;
+  }
 }
 
-export default Currency;
+export default SteamCurrency;

@@ -1,5 +1,4 @@
 import SteamPage, { SteamPageConfiguration } from "./SteamPage";
-import SteamPageLoader from "./SteamPageLoader";
 import Badges, { BadgeData } from "./component/Badges";
 import ComponentLoader from "./component/ComponentLoader";
 
@@ -34,10 +33,10 @@ class UserCompletedBadgesPage extends SteamPage {
     super(root, UserCompletedBadgesPage.configuration);
     this.steamId = steamId;
     this.currentPage = currentPage;
-    this.lastPage = this.findLastPage(root) ?? this.currentPage;
+    this.lastPage = UserCompletedBadgesPage.findLastPage(root) ?? this.currentPage;
   }
 
-  private findLastPage(root: HTMLElement): number | undefined {
+  private static findLastPage(root: HTMLElement): number | undefined {
     const element = root.querySelector("div.pageLinks > a:nth-last-child(2)");
     return element === null ? undefined : parseInt((element as HTMLElement).innerText);
   }
@@ -47,12 +46,9 @@ class UserCompletedBadgesPage extends SteamPage {
     return this.lastPage;
   }
 
-  public nextPage(): Promise<UserCompletedBadgesPage> {
-    if (!this.hasNextPage()) {
-      throw new Error("No more pages.");
-    }
-    //TODO SteamPageLoader to another place
-    return SteamPageLoader.loadUserCompletedBadges(this.steamId, this.currentPage + 1);
+
+  public getCurrentPage():number{
+    return this.currentPage;
   }
 
   public hasNextPage(): boolean {
