@@ -17,7 +17,6 @@ class SteamPageLoader {
   }
 
   public async loadGameCard(steamId: string, appId: number): Promise<GameCardsPage> {
-    console.log(`${this.host}/profiles/${steamId}/gamecards/${appId}`)
     return await this.httpClient.get<GameCardsPage>(`${this.host}/profiles/${steamId}/gamecards/${appId}`, {
       retries: {
         count: 4,
