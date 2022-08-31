@@ -1,8 +1,12 @@
-<h1 align="center"><img align="center" height="128" src="public/logo.png" alt="logo"> Steam Enchanter</h1>
+<h1 align="center"><img align="center" height="128" src="public/icon.png" alt="logo"> Steam Enchanter</h1>
 
 This is extension of Google Chrome browsers for [Steam](https://store.steampowered.com) users. Automate processes for getting badges.
 
 ---
+[![store](https://img.shields.io/chrome-web-store/v/ddjjembcdeddfaebkemgchgfbabbkppl)](https://chrome.google.com/webstore/detail/steam-enchanter/ddjjembcdeddfaebkemgchgfbabbkppl)
+[![rating](https://img.shields.io/chrome-web-store/rating/ddjjembcdeddfaebkemgchgfbabbkppl)](https://chrome.google.com/webstore/detail/steam-enchanter/ddjjembcdeddfaebkemgchgfbabbkppl)
+
+
 [![codecov](https://codecov.io/gh/BigTows/Steam-Enchanter/branch/main/graph/badge.svg?token=S3ZP1I7M06)](https://codecov.io/gh/BigTows/Steam-Enchanter)
 ## Features
  

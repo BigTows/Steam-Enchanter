@@ -37,6 +37,7 @@ class SteamMarketApiImpl implements SteamMarketApi {
 
   /**
    * Create order at steam market.
+   * @return The promise of order id
    */
   public async createOrder(request: CreateMarkerOrderRequest): Promise<string> {
     const data = new URLSearchParams();
