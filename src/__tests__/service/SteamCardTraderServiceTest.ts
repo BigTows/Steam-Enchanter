@@ -33,5 +33,22 @@ test("Create trader process.", async () => {
     }
   ], 5);
 
-  expect(process.getCurrentStatus()).toBe(Status.pending)
+  expect(process.getCurrentStatus()).toBe(Status.pending);
+});
+
+test("When session id is not initialized", async () => {
+  const steamApiMock = mock<SteamMarketApi>();
+
+  const service = new SteamCardTraderService(steamApiMock);
+
+  await expect(async () => {
+    await service.createTrader([
+      {
+        appId: 10,
+        hashName: "112",
+        quantity: 2,
+        price: 91
+      }
+    ], 5);
+  }).rejects.toThrowError("Session id is not initialized");
 });
