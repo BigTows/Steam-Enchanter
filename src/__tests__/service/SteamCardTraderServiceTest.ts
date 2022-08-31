@@ -9,7 +9,7 @@ test("Create trader process.", async () => {
 
   const steamApiMock = mock<SteamMarketApi>();
   const sessionId = "12414";
-  Cookies.set("sessionid", sessionId);
+  Cookies.set("sessionid", sessionId);//TODO side effect :(
 
   const service = new SteamCardTraderService(steamApiMock);
 
@@ -38,7 +38,7 @@ test("Create trader process.", async () => {
 
 test("When session id is not initialized", async () => {
   const steamApiMock = mock<SteamMarketApi>();
-
+  Cookies.remove('sessionid')
   const service = new SteamCardTraderService(steamApiMock);
 
   await expect(async () => {
