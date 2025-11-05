@@ -1,6 +1,6 @@
 {
   "name": "steam-enchanter",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Google Chrome extension for Steam. Automating some actions for Level up your account.",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "url": "https://github.com/BigTows/Steam-Enchanter.git"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "1.12.0",
     "currency.js": "^2.0.4",
     "js-cookie": "^3.0.1",
     "reflect-metadata": "^0.1.13",
