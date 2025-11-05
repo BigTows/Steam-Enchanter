@@ -45,6 +45,35 @@ test("Create order", async () => {
 });
 
 
+test("Can't create order, need confirmation", async () => {
+    const mockHttp = mock<HttpClient>();
+    const steamMarketApi = new SteamMarketApiImpl("localhost", mockHttp);
+
+    mockHttp.post.mockReturnValue(new Promise((resolve) => {
+        resolve(
+            {
+                success: 22,
+                confirmation:{
+                    confirmation_id: "124124124",
+                }
+            }
+        );
+    }));
+
+    await expect(() => {
+        return steamMarketApi.createOrder(
+            {
+                sessionId: "124",
+                currency: 5,
+                appId: 730,
+                marketHashName: "Any",
+                priceTotal: 23,
+                quantity: 151
+            }
+        );
+    }).rejects.toThrowError("You need to confirm your order (124124124).");
+});
+
 test("Create order, unsuccessful", async () => {
   const mockHttp = mock<HttpClient>();
   const steamMarketApi = new SteamMarketApiImpl("localhost", mockHttp);
