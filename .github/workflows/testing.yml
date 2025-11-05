@@ -23,9 +23,10 @@ jobs:
           npm install
           npm run test
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
