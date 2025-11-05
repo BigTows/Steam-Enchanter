@@ -6,6 +6,7 @@ import { injector } from "../../../configuration/Injector";
 import SteamCardTraderService from "../../../service/SteamCardTraderService";
 import { CardMarketPosition } from "../../../steam/pages/component/CardBuyerTable";
 import { Status } from "../../../service/SteamCardTraderProcess";
+import NeedConfirmationStreamApiException from "../../../api/steam/exception/NeedConfirmationStreamApiException";
 
 interface BadgeProperties {
   steamId: string,
@@ -17,6 +18,7 @@ enum BadgeStatus {
   Waiting,
   Processing,
   PriceLoaded,
+  NeedConfirmation = 4,
   Completed,
   Error
 }
@@ -98,13 +100,20 @@ Items will be purchased at the cheapest price available, so the order may end up
         );
       case BadgeStatus.PriceLoaded:
         return (
-          <a onClick={this.order}
+          <a onClick={this.order} data-tooltip-html="You should confirm the order in Steam App."
              className="btn_green_white_innerfade btn_medium_wide btn_uppercase market_unstyled_button"><span>PLACE ORDER</span></a>
         );
       case BadgeStatus.Completed:
         return (
           <span className={"market_multi_warning"}>✔️</span>
         );
+      case BadgeStatus.NeedConfirmation:
+          return (
+              <a onClick={this.order}
+                 className="btn_profile_action btn_medium">
+                  <span>Check Steam App, try again</span>
+              </a>
+          );
       case BadgeStatus.Error:
         return (
           <span className="market_multi_warning market_multi_warning_withimg">
@@ -163,8 +172,12 @@ Items will be purchased at the cheapest price available, so the order may end up
         }
       }, 1000);
     }).catch(error => {
-      console.error(error);
-      this.setState({ status: BadgeStatus.Error });
+        if (error instanceof NeedConfirmationStreamApiException){
+            this.setState({ status: BadgeStatus.NeedConfirmation });
+        }else {
+            console.error(error);
+            this.setState({status: BadgeStatus.Error});
+        }
     });
 
   }

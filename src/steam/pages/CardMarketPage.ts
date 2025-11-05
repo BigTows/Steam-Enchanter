@@ -17,7 +17,7 @@ class CardMarketPage extends SteamPage {
   private static readonly configuration: Array<SteamPageConfiguration> = [
     {
       name: Components.Table,
-      selector: "#BG_bottom > table",
+      selector: "#multibuy_ctn > table",
       component: new ComponentLoader(CardBuyerTable)
     },
     {
