@@ -1,4 +1,5 @@
 import React from "react";
+import currency from "currency.js";
 import Loading from "./ui/Loading";
 import LevelUpService from "../../../service/LevelUpService";
 import SteamCurrency from "../../../steam/utils/SteamCurrency";
@@ -11,7 +12,8 @@ import NeedConfirmationStreamApiException from "../../../api/steam/exception/Nee
 interface BadgeProperties {
   steamId: string,
   appId: number,
-  appName: string
+  appName: string,
+  overpricePercent: number
 }
 
 enum BadgeStatus {
@@ -126,9 +128,17 @@ Items will be purchased at the cheapest price available, so the order may end up
 
 
   private calculateBadgePrice(): string {
-    const { price } = this.state;
+    const { price, orderDetails } = this.state;
 
-    return price?.toFormat() ?? "XXX";
+    if (price === undefined || orderDetails === undefined) {
+      return "XXX";
+    }
+
+    const totalCents = orderDetails.reduce((sum, position) => {
+      return sum + Math.ceil(position.price * (1 + this.props.overpricePercent / 100)) * position.quantity;
+    }, 0);
+
+    return currency(totalCents, { fromCents: true, symbol: SteamCurrency.getCurrencySymbolByWalletCurrencyNumber(price.getId()) }).format();
   }
 
   private calculateApp() {
@@ -159,7 +169,8 @@ Items will be purchased at the cheapest price available, so the order may end up
 
     injector.resolve(SteamCardTraderService).createTrader(
       orderDetails,
-      price.getId()
+      price.getId(),
+      this.props.overpricePercent
     ).then(a => {
       //TODO promise?
       const interval = setInterval(() => {
