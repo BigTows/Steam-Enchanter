@@ -49,7 +49,7 @@ class CardBuyerTable extends Table implements SteamElement {
 
       return <CardMarketPosition>{
         quantity: parseInt(rowKeyValue.get("quantity") as string),
-        price: currency(rowKeyValue.get("price") as string).value * 100,
+        price: currency(rowKeyValue.get("price") as string, { decimal: ",", separator: "." }).intValue,
         appId: parseInt(metaData[0]),
         hashName: metaData[1],
       };

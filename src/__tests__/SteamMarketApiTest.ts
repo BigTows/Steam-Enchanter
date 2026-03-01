@@ -40,7 +40,7 @@ test("Create order", async () => {
   data.append("billing_state", "");
   data.append("save_my_address", "0");
 
-  expect(mockHttp.post).toHaveBeenCalledWith("localhost/market/createbuyorder/", expect.anything(), anyObject());
+  expect(mockHttp.post).toHaveBeenCalledWith("localhost/market/createbuyorder/", data, anyObject());
   expect(result).toEqual(orderId);
 });
 
