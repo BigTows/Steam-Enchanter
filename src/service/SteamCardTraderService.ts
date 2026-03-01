@@ -15,13 +15,13 @@ class SteamCardTraderService {
     }
 
 
-    public async createTrader(positions: Array<CardMarketPosition>, currencyId: number): Promise<SteamCardTraderProcess> {
+    public async createTrader(positions: Array<CardMarketPosition>, currencyId: number, overpricePercent: number): Promise<SteamCardTraderProcess> {
         const sessionId = this.getSessionId();
 
         const cardOrderOperationContexts: Array<CardOrderOperationContext> = [];
 
         for (const position of positions) {
-            const result = await this.createOrder(sessionId, position, currencyId);
+            const result = await this.createOrder(sessionId, position, currencyId, overpricePercent);
             cardOrderOperationContexts.push(
                 {
                     orderId: result,
@@ -33,15 +33,13 @@ class SteamCardTraderService {
     }
 
 
-    private async createOrder(sessionId: string, position: CardMarketPosition, currencyId: number): Promise<string> {
-        const maximumOverprice = 200;// TODO 200 is maximum overprice for position, move to options.
-
+    private async createOrder(sessionId: string, position: CardMarketPosition, currencyId: number, overpricePercent: number): Promise<string> {
         return await this.steamMarketApi.createOrder({
             sessionId: sessionId,
             currency: currencyId,
             appId: position.appId,
             marketHashName: position.hashName,
-            priceTotal: (position.price + maximumOverprice) * position.quantity,
+            priceTotal: Math.ceil(position.price * (1 + overpricePercent / 100)) * position.quantity,
             quantity: position.quantity
         });
     }

@@ -20,7 +20,7 @@ test("Create trader process.", async () => {
       currency: 5,
       appId: 10,
       marketHashName: "112",
-      priceTotal: (91 + 200) * 2,
+      priceTotal: Math.ceil(91 * 1.10) * 2,
       quantity: 2
     }).mockReturnValue(new Promise(resolve => resolve("order-1")));
 
@@ -31,7 +31,7 @@ test("Create trader process.", async () => {
       quantity: 2,
       price: 91
     }
-  ], 5);
+  ], 5, 10);
 
   expect(process.getCurrentStatus()).toBe(Status.pending);
 });
@@ -49,6 +49,6 @@ test("When session id is not initialized", async () => {
         quantity: 2,
         price: 91
       }
-    ], 5);
+    ], 5, 10);
   }).rejects.toThrowError("Session id is not initialized");
 });

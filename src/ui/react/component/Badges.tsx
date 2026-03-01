@@ -12,7 +12,8 @@ interface BadgesProperties {
 
 interface BadgesState {
   badges?: Array<SteamBadgePrice>,
-  currentPage: number
+  currentPage: number,
+  overpricePercent: number
 }
 
 export default class Badges extends React.Component<BadgesProperties, BadgesState> {
@@ -21,9 +22,10 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
 
   constructor(props: BadgesProperties) {
     super(props);
-    this.state = { currentPage: 1 };
+    this.state = { currentPage: 1, overpricePercent: 10 };
     this.levelUpService = injector.resolve(LevelUpService);
     this.onPageChanged = this.onPageChanged.bind(this);
+    this.onOverpriceChanged = this.onOverpriceChanged.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +39,13 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
     this.setState({ currentPage: newPage });
   }
 
+  onOverpriceChanged(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = parseInt(event.target.value, 10);
+    if (!isNaN(value) && value >= 0) {
+      this.setState({ overpricePercent: value });
+    }
+  }
+
   render() {
     const pagination = this.state.badges !== undefined ?
       <Pagination items={this.state.badges.length} itemsPerPage={Badges.ITEMS_PER_PAGE}
@@ -44,9 +53,26 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
 
     return (
       <div>
-        <div className={"profile_customization_header ellipsis"}>Uncompleted badges <span className={`profile_paging`}
-                                                                                          style={{ background: "none" }}>(Price stats provided by <a
-          href="https://www.steamcardexchange.net/" target="_blank">SteamCardExchange</a>)</span></div>
+        <div className={"profile_customization_header ellipsis"} style={{ display: "flex", alignItems: "center" }}>
+          <span>Uncompleted badges</span>
+          <span className={`profile_paging`} style={{ background: "none" }}>(Price stats provided by <a
+            href="https://www.steamcardexchange.net/" target="_blank">SteamCardExchange</a>)</span>
+          <span style={{ marginLeft: "auto", fontSize: "13px", color: "#BFBFBF", whiteSpace: "nowrap" }}
+                title="Maximum percentage above the current lowest price you're willing to pay. Higher values increase the chance of fulfilling the order, but cost more.">
+            Overprice: <input type="number" value={this.state.overpricePercent}
+                              onChange={this.onOverpriceChanged}
+                              min={0}
+                              style={{
+                                backgroundColor: "rgba(0,0,0,0.2)",
+                                border: "1px solid #000",
+                                boxShadow: "1px 1px 0 0 rgba(91,132,181,0.2)",
+                                color: "#BFBFBF",
+                                fontSize: "13px",
+                                width: "50px",
+                                textAlign: "center"
+                              }} />%
+          </span>
+        </div>
         <div className={"profile_customization_block"}>
           <div className="customtext_showcase">
             {pagination}
@@ -98,6 +124,7 @@ export default class Badges extends React.Component<BadgesProperties, BadgesStat
       .map(steamBadgePrice => {
         return (
           <Badge steamId={this.props.steamId} appId={steamBadgePrice.appId} appName={steamBadgePrice.appName}
+                 overpricePercent={this.state.overpricePercent}
                  key={`${steamBadgePrice.appId}-${steamBadgePrice.appName}`} />
         );
       });
